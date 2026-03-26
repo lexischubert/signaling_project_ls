@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#f0f4f8"/>
+  <rect x="60" y="60" width="180" height="130" rx="8" fill="#4a90d9"/>
+  <rect x="280" y="80" width="120" height="90" rx="6" fill="#50c878"/>
+  <circle cx="460" cy="180" r="70" fill="#e74c3c"/>
+  <rect x="80" y="240" width="440" height="18" rx="4" fill="#bbb"/>
+  <rect x="80" y="270" width="320" height="14" rx="4" fill="#ccc"/>
+  <text x="300" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#888">Practice Image — not part of the main study</text>
+</svg>

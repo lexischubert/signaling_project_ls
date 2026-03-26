@@ -1,0 +1,205 @@
+{{ block title }}Image Labelling Task{{ endblock }}
+
+{{ block content }}
+<div class="container-fluid mt-3">
+
+  <!-- ── Timer bar ── -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <span class="text-muted small">{{ block_label }}</span>
+        <span class="badge bg-secondary px-3 py-2 fs-6">
+          Time remaining:&nbsp;<span id="timer-display" class="font-monospace">--:--</span>
+        </span>
+      </div>
+      <div class="progress mt-1" style="height: 5px;">
+        <div id="timer-bar" class="progress-bar bg-success" role="progressbar" style="width:100%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Task card ── -->
+  <div id="task-card" class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="card shadow-sm">
+
+        <!-- Image area -->
+        <div
+          id="image-area"
+          class="card-img-top d-flex align-items-center justify-content-center bg-light"
+          style="min-height: 320px; padding: 1.5rem;"
+        >
+          <img
+            id="task-image"
+            src=""
+            alt="Task image"
+            class="img-fluid"
+            style="max-height: 380px; display: none;"
+          >
+          <div id="img-spinner" class="text-center text-muted">
+            <div class="spinner-border text-secondary mb-2" role="status">
+              <span class="visually-hidden">Loading…</span>
+            </div>
+            <p class="mb-0">Loading image…</p>
+          </div>
+        </div>
+
+        <!-- Question + answer -->
+        <div class="card-body">
+          <p id="question-text" class="lead mb-3">—</p>
+          <div class="mb-3">
+            <textarea
+              id="answer-input"
+              class="form-control"
+              rows="3"
+              placeholder="Type your answer here…"
+              disabled
+            ></textarea>
+            <div class="invalid-feedback">Please enter an answer before submitting.</div>
+          </div>
+          <button
+            id="submit-btn"
+            class="btn btn-primary w-100"
+            onclick="submitAnswer()"
+            disabled
+          >
+            Submit Answer &nbsp;<small class="opacity-75">(or Ctrl + Enter)</small>
+          </button>
+        </div>
+
+        <!-- Progress footer -->
+        <div class="card-footer text-muted text-center small">
+          Image <span id="img-counter">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Pool-exhausted notice (hidden until needed) ── -->
+  <div id="pool-exhausted" class="row justify-content-center" style="display:none!important;">
+    <div class="col-12 col-lg-8">
+      <div class="alert alert-success mt-3">
+        <h5 class="alert-heading">All images completed!</h5>
+        <p class="mb-0">
+          You have labelled every available image. The session will end automatically
+          when the timer reaches zero.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container-fluid -->
+
+<script>
+/* ── State ───────────────────────────────────────────────── */
+var TASK_DURATION  = {{ duration_seconds }};
+var timeRemaining  = TASK_DURATION;
+var imageShownAt   = null;
+var timerStarted   = false;
+
+/* ── Timer (starts only when first image is displayed) ───── */
+function fmt(s) {
+  var m   = Math.floor(s / 60);
+  var sec = s % 60;
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function startTimer() {
+  if (timerStarted) return;
+  timerStarted = true;
+  var display = document.getElementById('timer-display');
+  var bar     = document.getElementById('timer-bar');
+  display.textContent = fmt(timeRemaining);
+  var iv = setInterval(function () {
+    if (timeRemaining > 0) timeRemaining--;
+    display.textContent = fmt(timeRemaining);
+    var pct = timeRemaining / TASK_DURATION * 100;
+    bar.style.width = pct + '%';
+    bar.className = 'progress-bar ' +
+      (pct > 20 ? 'bg-success' : pct > 10 ? 'bg-warning' : 'bg-danger');
+    if (timeRemaining === 0) clearInterval(iv);
+  }, 1000);
+}
+
+/* ── Image display ───────────────────────────────────────── */
+function showImage(data) {
+  var img     = document.getElementById('task-image');
+  var spinner = document.getElementById('img-spinner');
+  var qText   = document.getElementById('question-text');
+  var input   = document.getElementById('answer-input');
+  var btn     = document.getElementById('submit-btn');
+  var counter = document.getElementById('img-counter');
+
+  img.style.display = 'none';
+  spinner.style.display = 'block';
+
+  /* Set handlers BEFORE setting src so cached images don't miss onload */
+  img.onload = function () {
+    spinner.style.display = 'none';
+    img.style.display = 'block';
+    startTimer();
+  };
+  img.onerror = function () {
+    spinner.innerHTML =
+      '<p class="text-danger small mb-0">Could not load image: <code>' +
+      data.filename + '</code><br>Check that the file exists in <code>_static/images/</code></p>';
+    startTimer();
+  };
+  img.src = '/static/images/' + data.filename;
+
+  qText.textContent = data.question;
+  counter.textContent = (data.index + 1) + ' / ' + data.total;
+  input.value = '';
+  input.disabled = false;
+  input.classList.remove('is-invalid');
+  btn.disabled = false;
+  input.focus();
+  imageShownAt = Date.now();
+}
+
+/* ── oTree live callback (must be a top-level named function) */
+function liveRecv(data) {
+  if (data.type === 'image') {
+    showImage(data);
+  } else if (data.type === 'pool_exhausted') {
+    document.getElementById('task-card').style.display = 'none';
+    document.getElementById('pool-exhausted').style.removeProperty('display');
+  }
+}
+
+/* ── Submit answer ───────────────────────────────────────── */
+function submitAnswer() {
+  var input  = document.getElementById('answer-input');
+  var btn    = document.getElementById('submit-btn');
+  var answer = input.value.trim();
+  if (!answer) {
+    input.classList.add('is-invalid');
+    return;
+  }
+  input.classList.remove('is-invalid');
+  btn.disabled   = true;
+  input.disabled = true;
+  liveSend({
+    type: 'submit_answer',
+    answer: answer,
+    response_time_ms: imageShownAt ? Date.now() - imageShownAt : 0,
+  });
+}
+
+/* ── Keyboard shortcut: Ctrl+Enter ──────────────────────── */
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+    var btn = document.getElementById('submit-btn');
+    if (!btn.disabled) submitAnswer();
+  }
+});
+
+/* ── Init: first image is injected by the server via js_vars ─ */
+document.addEventListener('DOMContentLoaded', function () {
+  var first = js_vars.first_image;
+  if (first && first.filename) {
+    showImage(first);
+  }
+});
+</script>
+{{ endblock }}

@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+db.sqlite3
+_rooms/
+_static_root/
+*.egg-info/
+.DS_Store
+*.db

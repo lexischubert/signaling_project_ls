@@ -1,0 +1,39 @@
+{{ block title }}Practice Trial{{ endblock }}
+
+{{ block content }}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+
+      <div class="alert alert-info">
+        <strong>Practice Trial</strong> — This is only for practice.
+        Your answer here will <em>not</em> be recorded or analysed.
+      </div>
+
+      <!-- Image -->
+      <div class="card mb-3 shadow-sm">
+        <div class="card-body text-center bg-light p-4">
+          <img
+            src="{{ static 'images/training_example.svg' }}"
+            alt="Practice image"
+            class="img-fluid"
+            style="max-height: 380px;"
+          >
+        </div>
+      </div>
+
+      <!-- Question + answer form -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <p class="lead mb-3"><strong>Question:</strong> {{ training_question }}</p>
+          {{ formfield player.training_answer }}
+        </div>
+        <div class="card-footer text-center py-3">
+          {{ next_button }}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{{ endblock }}

@@ -1,0 +1,68 @@
+{{ block title }}Break in Progress{{ endblock }}
+
+{{ block content }}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow text-center">
+        <div class="card-header bg-secondary text-white py-3">
+          <h4 class="mb-0">Break in progress — screen locked</h4>
+        </div>
+        <div class="card-body py-5">
+
+          <!-- Large countdown display -->
+          <div
+            id="break-timer"
+            style="font-size: 4.5rem; font-weight: 700; letter-spacing: 0.05em; color: #444; font-variant-numeric: tabular-nums;"
+          >--:--</div>
+
+          <p class="text-muted mt-2 mb-4">Time remaining in break</p>
+
+          <div class="progress" style="height: 10px; border-radius: 5px;">
+            <div
+              id="break-bar"
+              class="progress-bar bg-info"
+              role="progressbar"
+              style="width: 100%; transition: width 1s linear;"
+            ></div>
+          </div>
+
+          <p class="mt-4 text-muted small">
+            The second session will begin automatically when the break ends.<br>
+            Please stay on this page.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const DURATION = {{ duration_seconds }};
+  let remaining = DURATION;
+
+  function fmt(s) {
+    const m   = Math.floor(s / 60);
+    const sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const display = document.getElementById('break-timer');
+    const bar     = document.getElementById('break-bar');
+
+    display.textContent = fmt(remaining);
+
+    setInterval(function () {
+      if (remaining > 0) remaining--;
+      display.textContent = fmt(remaining);
+      bar.style.width = (remaining / DURATION * 100) + '%';
+    }, 1000);
+  });
+}());
+</script>
+{{ endblock }}

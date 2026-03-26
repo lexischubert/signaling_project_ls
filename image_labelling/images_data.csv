@@ -1,0 +1,11 @@
+filename,question
+sample_001.svg,Describe the main subject of this image in one or two sentences.
+sample_002.svg,What colours are most prominent in this image?
+sample_003.svg,How many distinct objects can you identify in this image?
+sample_004.svg,Does this image depict an indoor or outdoor setting? Briefly explain.
+sample_005.svg,What emotion or atmosphere does this image convey?
+sample_006.svg,Describe the spatial arrangement of the main elements in this image.
+sample_007.svg,Is there any text or writing visible in this image? If so, what does it say?
+sample_008.svg,What time of day does this image appear to show? Explain your reasoning.
+sample_009.svg,Describe any human figures visible in this image, or state that there are none.
+sample_010.svg,What is the most unusual or unexpected element in this image?
