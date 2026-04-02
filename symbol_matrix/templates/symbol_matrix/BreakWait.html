@@ -1,5 +1,12 @@
 {{ block title }}Break in Progress{{ endblock }}
 
+{{ block styles }}
+<style>
+  body { overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
+  #break-timer { touch-action: none; user-select: none; }
+</style>
+{{ endblock }}
+
 {{ block content }}
 <div class="container mt-5">
   <div class="row justify-content-center">

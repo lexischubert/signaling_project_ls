@@ -213,6 +213,7 @@ class Player(BasePlayer):
     matrix_current_correct_cells = models.LongStringField(initial='[]')
     matrix_current_target_id     = models.IntegerField(initial=0)
     matrix_current_n_targets     = models.IntegerField(initial=0)
+    matrix_current_seed          = models.IntegerField(initial=0)
 
     # ----- Matrix — segment-level summaries (incremented per answer) -----
     seg1_tasks_attempted   = models.IntegerField(initial=0)
@@ -232,6 +233,61 @@ class Player(BasePlayer):
     payoff_seg2_credits        = models.IntegerField(initial=0)
     # $3 show-up fee + $0.01 per credit
     final_payoff_dollars = models.FloatField(initial=0.0)
+
+    # ----- Field ID (entered by participant at check-in) -----
+    field_id = models.StringField(label='Field ID')
+
+    # ----- Consent -----
+    consented = models.BooleanField(
+        label='I have read and understood the information above and I agree to participate.',
+        widget=widgets.CheckboxInput,
+        initial=False,
+    )
+
+    # ----- Demographics -----
+    demo_age = models.IntegerField(
+        label='What is your age (in years)?',
+        choices=list(range(15, 86)),
+    )
+    demo_gender = models.StringField(
+        label='What is your gender?',
+        choices=['Male', 'Female', 'Non-binary / gender diverse', 'Prefer not to say'],
+    )
+    demo_occupation = models.LongStringField(
+        label='What is your current occupation? (e.g. farmer, teacher, student, trader)',
+    )
+    demo_education = models.StringField(
+        label='What is the highest level of education you have completed?',
+        choices=[
+            'No formal schooling',
+            'Primary school (completed)',
+            'Secondary school (completed)',
+            'Vocational / technical training',
+            'Some university or college (not completed)',
+            "University degree (Bachelor's or equivalent)",
+            "Postgraduate degree (Master's or PhD)",
+        ],
+    )
+    demo_income = models.StringField(
+        label='What is your approximate monthly household income?',
+        choices=[
+            'Less than KES 5,000',
+            'KES 5,000 – 14,999',
+            'KES 15,000 – 29,999',
+            'KES 30,000 – 59,999',
+            'KES 60,000 – 99,999',
+            'KES 100,000 or more',
+            'Prefer not to say',
+        ],
+    )
+    demo_hours_slept = models.IntegerField(
+        label='How many hours did you sleep last night?',
+        choices=list(range(0, 13)),
+    )
+    demo_breakfast = models.LongStringField(
+        label='What did you have for breakfast today? (write "nothing" if you skipped it)',
+        blank=True,
+    )
 
     # ----- Timestamps -----
     captcha_start_time   = models.FloatField(null=True)
@@ -326,6 +382,7 @@ class MatrixAnswer(ExtraModel):
     n_missed            = models.IntegerField()
     n_incorrect_clicked = models.IntegerField()
     n_errors            = models.IntegerField()
+    random_seed         = models.IntegerField()      # seed to reproduce this exact grid
     clicked_cells       = models.LongStringField()  # JSON sorted list of ints
     correct_cells       = models.LongStringField()  # JSON sorted list of ints
     is_correct          = models.BooleanField()
@@ -667,11 +724,13 @@ def _generate_matrix_task():
     """
     if len(PURE_SYMBOL_DATA) < 2:
         raise RuntimeError('symbols.csv must have at least 2 rows.')
-    target     = random.choice(PURE_SYMBOL_DATA)
-    n_targets  = random.randint(MATRIX_MIN_TARGETS, MATRIX_MAX_TARGETS)
+    seed = random.randint(0, 2**31 - 1)
+    rng  = random.Random(seed)   # isolated RNG — does not affect global state
+    target      = rng.choice(PURE_SYMBOL_DATA)
+    n_targets   = rng.randint(MATRIX_MIN_TARGETS, MATRIX_MAX_TARGETS)
     non_targets = [s for s in PURE_SYMBOL_DATA if s['symbol_id'] != target['symbol_id']]
-    grid = [random.choice(non_targets) for _ in range(MATRIX_GRID_SIZE)]
-    target_positions = random.sample(range(MATRIX_GRID_SIZE), n_targets)
+    grid = [rng.choice(non_targets) for _ in range(MATRIX_GRID_SIZE)]
+    target_positions = rng.sample(range(MATRIX_GRID_SIZE), n_targets)
     for pos in target_positions:
         grid[pos] = target
     correct_cells = sorted(target_positions)
@@ -680,6 +739,7 @@ def _generate_matrix_task():
         'grid':          [{'id': s['symbol_id'], 'latex': s['latex']} for s in grid],
         'correct_cells': correct_cells,
         'n_targets':     n_targets,
+        'seed':          seed,
     }
 
 
@@ -691,6 +751,7 @@ def _matrix_live_method(player, data, block):
         player.matrix_current_correct_cells = json.dumps(task['correct_cells'])
         player.matrix_current_target_id     = task['target']['id']
         player.matrix_current_n_targets     = task['n_targets']
+        player.matrix_current_seed          = task['seed']
         return {player.id_in_group: {'type': 'task', 'task': task}}
 
     if msg_type == 'submit_answer':
@@ -728,6 +789,7 @@ def _matrix_live_method(player, data, block):
             target_symbol_id=player.matrix_current_target_id,
             target_latex=data.get('target_latex', ''),
             n_targets=player.matrix_current_n_targets,
+            random_seed=player.matrix_current_seed,
             n_correct_clicked=n_correct_clicked,
             n_missed=n_missed,
             n_incorrect_clicked=n_incorrect_clicked,
@@ -744,6 +806,7 @@ def _matrix_live_method(player, data, block):
         player.matrix_current_correct_cells = json.dumps(task['correct_cells'])
         player.matrix_current_target_id     = task['target']['id']
         player.matrix_current_n_targets     = task['n_targets']
+        player.matrix_current_seed          = task['seed']
         return {player.id_in_group: {'type': 'next_task', 'task': task}}
 
     return {}
@@ -765,18 +828,30 @@ def custom_export(players):
         'session_code',
         'time_started_utc',
         'experiment_end_time',
+        # Field ID
+        'field_id',
         # Config
         'task_type',
         'task_minutes',
         'break_minutes',
-        # Break decision
+        # Consent & break decision
+        'consented',
         'break_choice',
+        # Demographics
+        'demo_age',
+        'demo_gender',
+        'demo_occupation',
+        'demo_education',
+        'demo_income',
+        'demo_hours_slept',
+        'demo_breakfast',
         # Per-trial fields
         'block',
         'task_number',
         'target_symbol_id',
         'target_latex',
         'n_targets',
+        'random_seed',
         'n_correct_clicked',
         'n_missed',
         'n_incorrect_clicked',
@@ -797,15 +872,25 @@ def custom_export(players):
                 session.code,
                 participant.time_started_utc,
                 player.field_maybe_none('experiment_end_time'),
+                player.field_maybe_none('field_id'),
                 session.config.get('task_type', ''),
                 session.config.get('task_minutes', ''),
                 session.config.get('break_minutes', ''),
+                player.field_maybe_none('consented'),
                 player.field_maybe_none('break_choice'),
+                player.field_maybe_none('demo_age'),
+                player.field_maybe_none('demo_gender'),
+                player.field_maybe_none('demo_occupation'),
+                player.field_maybe_none('demo_education'),
+                player.field_maybe_none('demo_income'),
+                player.field_maybe_none('demo_hours_slept'),
+                player.field_maybe_none('demo_breakfast'),
                 ans.block,
                 ans.task_number,
                 ans.target_symbol_id,
                 ans.target_latex,
                 ans.n_targets,
+                ans.random_seed,
                 ans.n_correct_clicked,
                 ans.n_missed,
                 ans.n_incorrect_clicked,
@@ -1147,6 +1232,27 @@ class CombinedTask2(Page):
         return _combined_live_method(player, data)
 
 
+def _matrix_practice_live_method(player, data):
+    """Serves practice trials — same grid generation, no data recorded."""
+    msg_type = data.get('type')
+
+    if msg_type == 'request_task':
+        task = _generate_matrix_task()
+        return {player.id_in_group: {'type': 'task', 'task': task}}
+
+    if msg_type == 'submit_practice':
+        trial = data.get('trial', 1)
+        if trial == 1:
+            # Send second practice trial
+            task = _generate_matrix_task()
+            return {player.id_in_group: {'type': 'next_task', 'task': task}}
+        else:
+            # Both practice trials done — tell client to advance the page
+            return {player.id_in_group: {'type': 'practice_complete'}}
+
+    return {}
+
+
 # ---------------------------------------------------------------------------
 # Pages — matrix (pure symbol) task
 # ---------------------------------------------------------------------------
@@ -1155,6 +1261,37 @@ class MatrixInstructions(Page):
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
+            'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
+        }
+
+
+class MatrixPractice(Page):
+    """Two free-form practice trials — no data recorded, no hints."""
+
+    @staticmethod
+    def is_displayed(player):
+        return player.session.config.get('task_type') == 'matrix'
+
+    @staticmethod
+    def live_method(player, data):
+        return _matrix_practice_live_method(player, data)
+
+
+class MatrixStartScreen(Page):
+    """Pre-task reminder screen — participant clicks Start (auto-advances after 20 s)."""
+
+    @staticmethod
+    def is_displayed(player):
+        return player.session.config.get('task_type') == 'matrix'
+
+    @staticmethod
+    def get_timeout_seconds(player):
+        return 20
 
     @staticmethod
     def vars_for_template(player):
@@ -1279,8 +1416,59 @@ class Goodbye(Page):
         }
 
 
+# ---------------------------------------------------------------------------
+# Pages — field ID, consent, demographics
+# ---------------------------------------------------------------------------
+
+class FieldIDEntry(Page):
+    """First screen: participant enters their field ID (assigned by the research team)."""
+    form_model  = 'player'
+    form_fields = ['field_id']
+
+    @staticmethod
+    def is_displayed(player):
+        return player.session.config.get('task_type') == 'matrix'
+
+
+class Consent(Page):
+    """Informed consent — must tick checkbox to proceed."""
+    form_model  = 'player'
+    form_fields = ['consented']
+
+    @staticmethod
+    def is_displayed(player):
+        return player.session.config.get('task_type') == 'matrix'
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
+            'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
+        }
+
+    @staticmethod
+    def error_message(player, values):
+        if not values.get('consented'):
+            return 'Please tick the checkbox to confirm your consent before continuing.'
+
+
+class Demographics(Page):
+    """Post-task demographic survey — shown after the second session, before the payoff."""
+    form_model  = 'player'
+    form_fields = [
+        'demo_age', 'demo_gender', 'demo_occupation',
+        'demo_education', 'demo_income', 'demo_hours_slept', 'demo_breakfast',
+    ]
+
+    @staticmethod
+    def is_displayed(player):
+        return player.session.config.get('task_type') == 'matrix'
+
+
 page_sequence = [
+    FieldIDEntry,    # matrix: participant enters field ID
     Welcome,
+    Consent,         # matrix: informed consent
     # Legacy instructions + training (hidden for matrix)
     Instructions,
     TrainingExample,
@@ -1290,13 +1478,15 @@ page_sequence = [
     OrderedTask,
     SymbolTask,
     CombinedTask,
-    # Matrix task — segment 1
+    # Matrix task — instructions + practice + real segment 1
     MatrixInstructions,
+    MatrixPractice,
+    MatrixStartScreen,
     MatrixTask,
     # Break
     BreakChoice,
-    BreakWait,       # shown only if break_choice == True
-    BridgeTask,      # legacy no-break bridge
+    BreakWait,         # shown only if break_choice == True
+    BridgeTask,        # legacy no-break bridge
     MatrixBridgeTask,  # matrix no-break bridge
     # Session 2
     Task2,
@@ -1305,5 +1495,6 @@ page_sequence = [
     SymbolTask2,
     CombinedTask2,
     MatrixTask2,
+    Demographics,    # matrix: post-task demographic survey
     Goodbye,
 ]

@@ -1,0 +1,100 @@
+{{ block title }}Short Survey{{ endblock }}
+
+{{ block styles }}
+<style>
+  body { background: #f8f9fa; }
+
+  .demo-wrap {
+    max-width: 620px;
+    margin: 2rem auto 3rem;
+  }
+
+  .demo-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 14px rgba(0,0,0,.10);
+    overflow: hidden;
+  }
+
+  .demo-card .d-header {
+    background: #1e40af;
+    color: #fff;
+    padding: 1.3rem 1.8rem;
+    text-align: center;
+  }
+  .demo-card .d-header h4 { margin: 0; font-size: 1.25rem; font-weight: 700; }
+  .demo-card .d-header p  { margin: .4rem 0 0; font-size: .87rem; opacity: .85; }
+
+  .demo-card .d-body { padding: 1.8rem 2rem; }
+
+  /* Override oTree's default form styling */
+  .demo-card .controls { margin-bottom: 1.4rem; }
+  .demo-card label.col-form-label {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: .93rem;
+    padding-bottom: .3rem;
+  }
+  .demo-card select.form-control,
+  .demo-card input[type=text].form-control,
+  .demo-card textarea.form-control {
+    border: 1.5px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: .93rem;
+    color: #1e293b;
+    padding: .5rem .75rem;
+  }
+  .demo-card select.form-control:focus,
+  .demo-card input[type=text].form-control:focus,
+  .demo-card textarea.form-control:focus {
+    border-color: #1e40af;
+    box-shadow: 0 0 0 3px rgba(30,64,175,.12);
+  }
+  .demo-card textarea.form-control { resize: vertical; min-height: 72px; }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 1.6rem 0;
+  }
+
+  .d-footer {
+    padding: 1rem 2rem 1.6rem;
+    text-align: center;
+    border-top: 1px solid #f1f5f9;
+  }
+  .d-footer button,
+  .d-footer input[type=submit] {
+    padding: 12px 48px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    background: #1e40af;
+    color: #fff;
+    cursor: pointer;
+  }
+  .d-footer button:active { opacity: .85; }
+</style>
+{{ endblock }}
+
+{{ block content }}
+<div class="demo-wrap">
+  <div class="demo-card">
+
+    <div class="d-header">
+      <h4>Almost done — a few quick questions</h4>
+      <p>These questions take about 1 minute. Your answers are kept strictly confidential.</p>
+    </div>
+
+    <div class="d-body">
+      {{ formfields }}
+    </div>
+
+    <div class="d-footer">
+      {{ next_button }}
+    </div>
+
+  </div>
+</div>
+{{ endblock }}
