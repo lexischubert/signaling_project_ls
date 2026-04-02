@@ -103,10 +103,22 @@
 
       <p class="section-title">What you will do</p>
       <p>
-        You will complete a symbol-matching task in two sessions of
-        <strong>{{ task_minutes }} minutes</strong> each, with an optional
-        {{ break_minutes }}-minute break in between. On each trial you will see a target symbol
-        and must select all matching symbols from a grid of 64.
+        {% if condition == 'no_break' %}
+          You will complete a symbol-matching task in two work periods:
+          a first session of <strong>{{ seg1_total_minutes }} minutes</strong>
+          followed by a second session of <strong>{{ task_minutes }} minutes</strong>,
+          with no break in between.
+        {% elif condition == 'forced_break' %}
+          You will complete a symbol-matching task in two sessions of
+          <strong>{{ task_minutes }} minutes</strong> each, separated by a
+          required <strong>{{ break_minutes }}-minute break</strong>.
+        {% else %}
+          You will complete a symbol-matching task in two sessions of
+          <strong>{{ task_minutes }} minutes</strong> each, with an optional
+          {{ break_minutes }}-minute break in between.
+        {% endif %}
+        On each trial you will see a target symbol and must select all matching symbols
+        from a grid of 64.
       </p>
 
       <p class="section-title">Payment</p>
