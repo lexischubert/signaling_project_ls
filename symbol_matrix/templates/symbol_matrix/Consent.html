@@ -111,10 +111,21 @@
 
       <p class="section-title">Payment</p>
       <p>
-        You will receive a show-up fee of <strong>$3.00</strong> for completing the study.
-        In addition, you earn <strong>$0.01 per correct task</strong> completed. Your total
-        earnings will be paid to you at the end of the session.
+        You will receive a <strong>show-up fee of $3.00</strong> for completing the study.
+        In addition, you earn experiment tokens for every correct task:
       </p>
+      <ul>
+        <li>
+          <strong>Session 1{% if condition != 'forced_break' %} (and the break period if you work through it){% endif %}:</strong>
+          1 token per correct task &mdash; each token is worth <strong>$0.004</strong>.
+        </li>
+        <li>
+          <strong>Session 2:</strong>
+          2 tokens per correct task &mdash; each token is worth $0.004,
+          so <strong>$0.008 per correct task</strong>.
+        </li>
+      </ul>
+      <p>Your total earnings will be paid to you at the end of the session.</p>
 
       <p class="section-title">Risks and benefits</p>
       <p>

@@ -1466,10 +1466,11 @@ class Goodbye(Page):
         # Payoff calculation
         player.payoff_seg1_bridge_credits = (
             player.seg1_tasks_correct + player.bridge_tasks_correct
-        )   # 1 credit per correct task in seg1 + bridge
+        )   # 1 token per correct task in seg1 + bridge ($0.004 each)
         player.payoff_seg2_credits = 2 * player.seg2_tasks_correct
+        # 2 tokens per correct task in seg2 ($0.004 each = $0.008 per task)
         total_credits = player.payoff_seg1_bridge_credits + player.payoff_seg2_credits
-        player.final_payoff_dollars = round(3.00 + 0.01 * total_credits, 2)
+        player.final_payoff_dollars = round(3.00 + 0.004 * total_credits, 2)
 
         # Also write to oTree's built-in payoff field (in points = dollars here)
         player.payoff = player.final_payoff_dollars
@@ -1489,8 +1490,8 @@ class Goodbye(Page):
             'final_payoff':        player.final_payoff_dollars,
             'break_choice':        player.field_maybe_none('break_choice'),
             # Pre-formatted dollar strings (avoids Jinja2 filter issues)
-            'seg1_bridge_dollars': '{:.2f}'.format(player.payoff_seg1_bridge_credits * 0.01),
-            'seg2_dollars':        '{:.2f}'.format(player.payoff_seg2_credits * 0.01),
+            'seg1_bridge_dollars': '{:.3f}'.format(player.payoff_seg1_bridge_credits * 0.004),
+            'seg2_dollars':        '{:.3f}'.format(player.payoff_seg2_credits * 0.004),
             'final_payoff_str':    '{:.2f}'.format(player.final_payoff_dollars),
         }
 
@@ -1536,6 +1537,7 @@ class Consent(Page):
         return {
             'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
+            'condition':     player.field_maybe_none('condition') or 'choice',
         }
 
     @staticmethod
