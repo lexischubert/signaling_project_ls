@@ -70,6 +70,6 @@ ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD', 'admin')
 
 DEMO_PAGE_INTRO_HTML = 'Symbol Matrix Task Experiment'
 
-SECRET_KEY = 'change-this-secret-key-before-deployment'
+SECRET_KEY = 'jK5lUftfOVMuiL7MkIa1EAL6-Aft_CLe2k2dK_mOiboAN1eTadrVRLC5AchMq0n8M38'
 
 INSTALLED_APPS = ['otree']
