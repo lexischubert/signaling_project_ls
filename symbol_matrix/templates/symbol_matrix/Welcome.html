@@ -17,10 +17,29 @@
             On each trial you will see a target symbol and must identify all matching symbols
             from a grid of 64.
           </p>
+
+          {% if condition == 'no_break' %}
+          <p>
+            The study consists of <strong>three consecutive work periods</strong>:
+            <strong>{{ task_minutes }} minutes</strong>, then
+            <strong>{{ break_minutes }} minutes</strong>, then
+            <strong>{{ task_minutes }} minutes</strong> — with no break in between.
+            You will work continuously for the full duration.
+          </p>
+          {% elif condition == 'forced_break' %}
+          <p>
+            The study consists of <strong>two sessions of {{ task_minutes }} minutes each</strong>,
+            separated by a <strong>required {{ break_minutes }}-minute break</strong>.
+            You will not be able to skip the break.
+          </p>
+          {% else %}
           <p>
             The study consists of <strong>two sessions of {{ task_minutes }} minutes each</strong>,
             with an optional {{ break_minutes }}-minute break in between.
+            After the first session you will choose whether to take a break or continue working.
           </p>
+          {% endif %}
+
           <hr>
           <p><strong>Before you begin, please note:</strong></p>
           <ul>

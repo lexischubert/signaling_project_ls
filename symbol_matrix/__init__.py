@@ -237,6 +237,12 @@ class Player(BasePlayer):
     # ----- Field ID (entered by participant at check-in) -----
     field_id = models.StringField(label='Field ID')
 
+    # ----- Condition (derived from field_id, stored for export) -----
+    # 'no_break'     — forced continuous work (seg1 + bridge + seg2)
+    # 'forced_break' — forced break between seg1 and seg2
+    # 'choice'       — participant chooses whether to take a break
+    condition = models.StringField(initial='')
+
     # ----- Consent -----
     consented = models.BooleanField(
         label='I have read and understood the information above and I agree to participate.',
@@ -400,6 +406,22 @@ def _task_duration(player):
 
 def _break_duration(player):
     return int(player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT) * 60)
+
+
+def _get_condition(player):
+    """Derive experimental condition from field_id.
+
+    Field IDs starting with '1' → no_break   (40 + 10 work + 40, no choice)
+    Field IDs starting with '2' → forced_break (40 + 10 break + 40, no choice)
+    Field IDs starting with '3' → choice       (40 + choose break/work + 40)
+    Any other value              → choice       (safe default)
+    """
+    fid = (player.field_maybe_none('field_id') or '').strip()
+    if fid.startswith('1'):
+        return 'no_break'
+    if fid.startswith('2'):
+        return 'forced_break'
+    return 'choice'
 
 
 # ---------------------------------------------------------------------------
@@ -828,8 +850,9 @@ def custom_export(players):
         'session_code',
         'time_started_utc',
         'experiment_end_time',
-        # Field ID
+        # Field ID & condition
         'field_id',
+        'condition',
         # Config
         'task_type',
         'task_minutes',
@@ -873,6 +896,7 @@ def custom_export(players):
                 participant.time_started_utc,
                 player.field_maybe_none('experiment_end_time'),
                 player.field_maybe_none('field_id'),
+                player.field_maybe_none('condition'),
                 session.config.get('task_type', ''),
                 session.config.get('task_minutes', ''),
                 session.config.get('break_minutes', ''),
@@ -914,6 +938,7 @@ class Welcome(Page):
             'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
             'task_type':     player.session.config.get('task_type', ''),
+            'condition':     player.field_maybe_none('condition') or 'choice',
         }
 
 
@@ -964,6 +989,11 @@ class Task1(Page):
 class BreakChoice(Page):
     form_model  = 'player'
     form_fields = ['break_choice']
+
+    @staticmethod
+    def is_displayed(player):
+        return (player.session.config.get('task_type') == 'matrix'
+                and _get_condition(player) == 'choice')
 
     @staticmethod
     def vars_for_template(player):
@@ -1267,6 +1297,7 @@ class MatrixInstructions(Page):
         return {
             'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
+            'condition':     player.field_maybe_none('condition') or 'choice',
         }
 
 
@@ -1298,6 +1329,7 @@ class MatrixStartScreen(Page):
         return {
             'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
+            'condition':     player.field_maybe_none('condition') or 'choice',
         }
 
 
@@ -1320,6 +1352,14 @@ class MatrixTask(Page):
     @staticmethod
     def live_method(player, data):
         return _matrix_live_method(player, data, block=1)
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        condition = _get_condition(player)
+        if condition == 'no_break':
+            player.break_choice = False   # will trigger MatrixBridgeTask
+        elif condition == 'forced_break':
+            player.break_choice = True    # will trigger BreakWait
 
 
 class MatrixBridgeTask(Page):
@@ -1428,6 +1468,10 @@ class FieldIDEntry(Page):
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.condition = _get_condition(player)
 
 
 class Consent(Page):

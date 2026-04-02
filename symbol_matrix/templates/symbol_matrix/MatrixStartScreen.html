@@ -115,11 +115,25 @@
       <span class="ico">🔇</span>
       No feedback is given after each task — do your best and move on.
     </li>
+    {% if condition == 'no_break' %}
+    <li>
+      <span class="ico">➡️</span>
+      After {{ task_minutes }} minutes you will <strong>continue working</strong>
+      for {{ break_minutes }} more minutes, then do the final {{ task_minutes }}-minute session.
+    </li>
+    {% elif condition == 'forced_break' %}
     <li>
       <span class="ico">☕</span>
-      After {{ task_minutes }} minutes you can choose to take a
-      <strong>{{ break_minutes }}-minute break</strong>.
+      After {{ task_minutes }} minutes you will take a
+      <strong>required {{ break_minutes }}-minute break</strong> before the final session.
     </li>
+    {% else %}
+    <li>
+      <span class="ico">☕</span>
+      After {{ task_minutes }} minutes you can <strong>choose</strong> to take a
+      {{ break_minutes }}-minute break or continue working.
+    </li>
+    {% endif %}
   </ul>
 
   <button type="button" id="start-btn">▶&nbsp;&nbsp;Start task</button>

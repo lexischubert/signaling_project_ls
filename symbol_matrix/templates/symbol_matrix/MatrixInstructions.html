@@ -241,6 +241,17 @@
     <div class="sdot"     id="d5"></div>
   </div>
 
+  <!-- Condition-specific study structure reminder -->
+  <div id="structure-note" style="text-align:center; font-size:clamp(.75rem,2vmin,.85rem); color:#64748b; margin-bottom:2px; font-weight:500;">
+    {% if condition == 'no_break' %}
+      Study structure: {{ task_minutes }} min work &rarr; {{ break_minutes }} min work &rarr; {{ task_minutes }} min work (no break)
+    {% elif condition == 'forced_break' %}
+      Study structure: {{ task_minutes }} min work &rarr; {{ break_minutes }} min break &rarr; {{ task_minutes }} min work
+    {% else %}
+      Study structure: {{ task_minutes }} min work &rarr; optional {{ break_minutes }} min break &rarr; {{ task_minutes }} min work
+    {% endif %}
+  </div>
+
   <div id="banner">
     <span id="b-icon"></span>
     <span id="b-text"></span>
