@@ -101,7 +101,7 @@
     <li>
       <span class="ico">➡️</span>
       After {{ task_minutes }} minutes you will <strong>continue working</strong>
-      for {{ break_minutes }} more minutes, then do the final {{ task_minutes }}-minute session.
+      for {{ break_minutes }} more minute{% if break_minutes != 1 %}s{% endif %}, then do the final {{ task_minutes }}-minute session.
     </li>
     {% elif condition == 'forced_break' %}
     <li>
