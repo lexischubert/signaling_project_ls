@@ -1,85 +1,22 @@
-{{ block title }}Informed Consent{{ endblock }}
+{{ block title }}{% if language == 'sw' %}Idhini ya Ufahamu{% else %}Informed Consent{% endif %}{{ endblock }}
 
 {{ block styles }}
 <style>
   body { background: #f8f9fa; }
-
-  .consent-wrap {
-    max-width: 660px;
-    margin: 2rem auto;
-  }
-
-  .consent-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 14px rgba(0,0,0,.10);
-    overflow: hidden;
-  }
-
-  .consent-card .c-header {
-    background: #1e40af;
-    color: #fff;
-    padding: 1.3rem 1.8rem;
-    text-align: center;
-  }
+  .consent-wrap { max-width: 660px; margin: 2rem auto; }
+  .consent-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 14px rgba(0,0,0,.10); overflow: hidden; }
+  .consent-card .c-header { background: #1e40af; color: #fff; padding: 1.3rem 1.8rem; text-align: center; }
   .consent-card .c-header h4 { margin: 0; font-size: 1.25rem; font-weight: 700; }
-
   .consent-card .c-body { padding: 1.8rem 2rem; }
-
-  .section-title {
-    font-weight: 700;
-    color: #1e293b;
-    margin: 1.2rem 0 .4rem;
-    font-size: .95rem;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-  }
+  .section-title { font-weight: 700; color: #1e293b; margin: 1.2rem 0 .4rem; font-size: .95rem; text-transform: uppercase; letter-spacing: .04em; }
   .section-title:first-child { margin-top: 0; }
-
   .c-body p, .c-body li { color: #334155; font-size: .93rem; line-height: 1.6; }
   .c-body ul { padding-left: 1.2rem; margin-bottom: .8rem; }
-
-  .agree-box {
-    margin-top: 1.6rem;
-    padding: 1.2rem 1.4rem;
-    background: #eff6ff;
-    border: 1.5px solid #bfdbfe;
-    border-radius: 8px;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .agree-box input[type=checkbox] {
-    width: 20px;
-    height: 20px;
-    margin-top: 2px;
-    flex-shrink: 0;
-    cursor: pointer;
-    accent-color: #1e40af;
-  }
-  .agree-box label {
-    font-size: .93rem;
-    color: #1e293b;
-    font-weight: 600;
-    cursor: pointer;
-    line-height: 1.5;
-  }
-
-  .c-footer {
-    padding: 1rem 2rem 1.6rem;
-    text-align: center;
-  }
-  .c-footer button,
-  .c-footer input[type=submit] {
-    padding: 11px 40px;
-    font-size: 1rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 8px;
-    background: #1e40af;
-    color: #fff;
-    cursor: pointer;
-  }
+  .agree-box { margin-top: 1.6rem; padding: 1.2rem 1.4rem; background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 8px; display: flex; align-items: flex-start; gap: 12px; }
+  .agree-box input[type=checkbox] { width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0; cursor: pointer; accent-color: #1e40af; }
+  .agree-box label { font-size: .93rem; color: #1e293b; font-weight: 600; cursor: pointer; line-height: 1.5; }
+  .c-footer { padding: 1rem 2rem 1.6rem; text-align: center; }
+  .c-footer button, .c-footer input[type=submit] { padding: 11px 40px; font-size: 1rem; font-weight: 700; border: none; border-radius: 8px; background: #1e40af; color: #fff; cursor: pointer; }
   .c-footer button:active { opacity: .85; }
 </style>
 {{ endblock }}
@@ -87,86 +24,118 @@
 {{ block content }}
 <div class="consent-wrap">
   <div class="consent-card">
-
     <div class="c-header">
-      <h4>Informed Consent</h4>
+      <h4>{% if language == 'sw' %}Idhini ya Ufahamu{% else %}Informed Consent{% endif %}</h4>
     </div>
-
     <div class="c-body">
-      
 
-      <p class="section-title">Purpose of the study</p>
-      <p>
-        We invite you to take part in a research study on decision-making and cognitive tasks.
-        The study is conducted by researchers from the Massachusetts Institute of Technology, 
-        the University of California Berkeley, the University of Zurich. 
-        The study involves responding quickly and correctly to images on your screen. 
-        <br>
-      </p>
+      {% if language == 'sw' %}
 
-      <p class="section-title">What you will do</p>
-      <p>
-        {% if condition == 'no_break' %}
-          You will complete a symbol-matching task:
-          the session lasts 90 minutes</strong>,
-          with no break.
-        {% elif condition == 'forced_break' %}
-          You will complete a symbol-matching task in two sessions of
-          <strong>{{ task_minutes }} minutes</strong> each, separated by a
-          required <strong>{{ break_minutes }}-minute break</strong>.
-        {% else %}
-          You will complete a symbol-matching task in two sessions of
-          <strong>{{ task_minutes }} minutes</strong> each, with an optional
-          {{ break_minutes }}-minute break in between.
-        {% endif %}
-        During a given round, you will see a target symbol and must select all matching symbols
-        from a grid of 100.
-      </p>
+        <p class="section-title">Madhumuni ya utafiti</p>
+        <p>Tunakukaribisha kushiriki katika utafiti wa maamuzi na kazi za akili.
+        Utafiti huu unafanywa na watafiti kutoka Massachusetts Institute of Technology,
+        Chuo Kikuu cha California Berkeley, na Chuo Kikuu cha Zurich.
+        Utafiti huu unahusisha kujibu haraka na kwa usahihi picha zinazoonekana kwenye skrini yako.</p>
 
-      <p class="section-title">Payment</p>
-      <p>
-        You will receive a <strong>participation payment of Ksh 350</strong> for completing the full study. 
-        We also cover your transport for Ksh200. 
-        In addition, you could earn up additional bonus payments based on task accuracy and speed. 
-        In total, you can expect to earn around Ksh 600 - 700.
-        In addition, you can earn Shillings for every correct task:
-      </p>
-      <p>Your total earnings will be paid via MPesa. 
-        We will calculate earnings immediately, but it may take a day or two for the payments to arrive because of administrative reasons.</p>
+        <p class="section-title">Utafanya nini</p>
+        <p>
+          {% if condition == 'no_break' %}
+            Utakamilisha kazi ya kulinganisha alama: kipindi kina muda wa dakika 90, bila mapumziko.
+          {% elif condition == 'forced_break' %}
+            Utakamilisha kazi ya kulinganisha alama katika vipindi viwili vya
+            <strong>dakika {{ task_minutes }}</strong> kila kimoja, vikigawanywa na
+            <strong>mapumziko ya lazima ya dakika {{ break_minutes }}</strong>.
+          {% else %}
+            Utakamilisha kazi ya kulinganisha alama katika vipindi viwili vya
+            <strong>dakika {{ task_minutes }}</strong> kila kimoja, na mapumziko ya hiari ya
+            dakika {{ break_minutes }} kati ya vipindi.
+          {% endif %}
+          Katika raundi moja, utaona alama lengwa na lazima uchague alama zote zinazolingana
+          kutoka kwenye gridi ya alama 100.
+        </p>
 
-      <p class="section-title">Risks and benefits</p>
-      <p>
-        There are no known risks beyond those of everyday computer use. 
-        There is no direct
-        personal benefit beyond the payment described above, but your responses will
-        contribute to scientific research.
-      </p>
+        <p class="section-title">Malipo</p>
+        <p>Utapokea <strong>malipo ya ushiriki ya Ksh 350</strong> kwa kukamilisha utafiti wote.
+        Pia tunafunika nauli yako ya Ksh 200.
+        Zaidi ya hayo, unaweza kupata malipo ya ziada ya bonasi kulingana na usahihi na kasi yako ya kazi.
+        Kwa jumla, unaweza kutarajia kupata kati ya Ksh 600–700.
+        Mapato yako yote yatalipwa kupitia M-PESA.
+        Tutahesabu mapato mara moja, lakini inaweza kuchukua siku moja au mbili kupokea malipo.</p>
 
-      <p class="section-title">Confidentiality</p>
-      <p>
-        Identifying information will be kept strictly confidential and will not be shared outside the research team. 
-        All data are stored securely and will only be reported in a anonymized, aggregated form.
-        Your name will never be linked to your responses in any publication. Your participant
-        ID (not your name) will be used to identify your data.
-      </p>
+        <p class="section-title">Hatari na manufaa</p>
+        <p>Hakuna hatari zinazojulikana zaidi ya hatari za kawaida za matumizi ya kompyuta.
+        Hakuna faida ya moja kwa moja ya kibinafsi zaidi ya malipo yaliyoelezwa hapo juu,
+        lakini majibu yako yatachangia utafiti wa kisayansi.</p>
 
-      <p class="section-title">Voluntary participation</p>
-      <p>
-        Participation is entirely voluntary, but you must be over the age of 18. You may stop at any time without penalty,
-        though you will only receive the full payment if you complete the study.
-        If you have questions, please ask the research team before proceeding.
-      </p>
+        <p class="section-title">Usiri</p>
+        <p>Taarifa zinazotambulisha zitahifadhiwa kwa siri na hazitashirikiwa nje ya timu ya utafiti.
+        Data zote huhifadhiwa kwa usalama na zitaripotiwa tu kwa njia isiyotambulisha watu binafsi.
+        Jina lako halitahusishwa na majibu yako katika chapisho lolote.</p>
+
+        <p class="section-title">Ushiriki wa hiari</p>
+        <p>Ushiriki ni wa hiari kabisa, lakini lazima uwe na umri wa zaidi ya miaka 18.
+        Unaweza kuacha wakati wowote bila adhabu, ingawa utapokea malipo kamili tu ukikamilisha utafiti.
+        Ikiwa una maswali, tafadhali uliza timu ya utafiti kabla ya kuendelea.</p>
+
+      {% else %}
+
+        <p class="section-title">Purpose of the study</p>
+        <p>We invite you to take part in a research study on decision-making and cognitive tasks.
+        The study is conducted by researchers from the Massachusetts Institute of Technology,
+        the University of California Berkeley, the University of Zurich.
+        The study involves responding quickly and correctly to images on your screen.</p>
+
+        <p class="section-title">What you will do</p>
+        <p>
+          {% if condition == 'no_break' %}
+            You will complete a symbol-matching task:
+            the session lasts <strong>90 minutes</strong>, with no break.
+          {% elif condition == 'forced_break' %}
+            You will complete a symbol-matching task in two sessions of
+            <strong>{{ task_minutes }} minutes</strong> each, separated by a
+            required <strong>{{ break_minutes }}-minute break</strong>.
+          {% else %}
+            You will complete a symbol-matching task in two sessions of
+            <strong>{{ task_minutes }} minutes</strong> each, with an optional
+            {{ break_minutes }}-minute break in between.
+          {% endif %}
+          During a given round, you will see a target symbol and must select all matching symbols
+          from a grid of 100.
+        </p>
+
+        <p class="section-title">Payment</p>
+        <p>You will receive a <strong>participation payment of Ksh 350</strong> for completing the full study.
+        We also cover your transport for Ksh 200.
+        In addition, you could earn additional bonus payments based on task accuracy and speed.
+        In total, you can expect to earn around Ksh 600–700.
+        Your total earnings will be paid via MPesa.
+        We will calculate earnings immediately, but it may take a day or two for the payments to arrive.</p>
+
+        <p class="section-title">Risks and benefits</p>
+        <p>There are no known risks beyond those of everyday computer use.
+        There is no direct personal benefit beyond the payment described above,
+        but your responses will contribute to scientific research.</p>
+
+        <p class="section-title">Confidentiality</p>
+        <p>Identifying information will be kept strictly confidential and will not be shared outside the research team.
+        All data are stored securely and will only be reported in anonymized, aggregated form.
+        Your name will never be linked to your responses in any publication.</p>
+
+        <p class="section-title">Voluntary participation</p>
+        <p>Participation is entirely voluntary, but you must be over the age of 18.
+        You may stop at any time without penalty, though you will only receive the full payment if you complete the study.
+        If you have questions, please ask the research team before proceeding.</p>
+
+      {% endif %}
 
       <div class="agree-box">
         {{ formfields }}
       </div>
 
     </div>
-
     <div class="c-footer">
       {{ next_button }}
     </div>
-
   </div>
 </div>
 {{ endblock }}

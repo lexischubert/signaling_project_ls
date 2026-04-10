@@ -1,249 +1,119 @@
-{{ block title }}Welcome{{ endblock }}
+{{ block title }}{% if language == 'sw' %}Karibu{% else %}Welcome{% endif %}{{ endblock }}
 
 {{ block styles }}
 <style>
   #otree-timeout { display: none !important; }
-
   body { background: #f0f4f8; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
-
-  #welcome-card {
-    max-width: 680px;
-    margin: 1.5rem auto;
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 2px 16px rgba(0,0,0,.10);
-    overflow: hidden;
-  }
-
-  .w-header {
-    background: #1e40af;
-    color: #fff;
-    padding: 1.6rem 1.8rem 1.4rem;
-    text-align: center;
-  }
-  .w-header h2 {
-    margin: 0 0 .3rem;
-    font-size: clamp(1.3rem, 4vmin, 1.75rem);
-    font-weight: 800;
-    letter-spacing: -.01em;
-  }
-  .w-header p {
-    margin: 0;
-    font-size: clamp(.82rem, 2.2vmin, .93rem);
-    opacity: .88;
-    line-height: 1.5;
-  }
-
+  #welcome-card { max-width: 680px; margin: 1.5rem auto; background: #fff; border-radius: 14px; box-shadow: 0 2px 16px rgba(0,0,0,.10); overflow: hidden; }
+  .w-header { background: #1e40af; color: #fff; padding: 1.6rem 1.8rem 1.4rem; text-align: center; }
+  .w-header h2 { margin: 0 0 .3rem; font-size: clamp(1.3rem, 4vmin, 1.75rem); font-weight: 800; letter-spacing: -.01em; }
+  .w-header p { margin: 0; font-size: clamp(.82rem, 2.2vmin, .93rem); opacity: .88; line-height: 1.5; }
   .w-body { padding: 1.4rem 1.6rem; }
-
-  /* What's coming section */
-  .steps-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 0;
-    margin-bottom: 1.4rem;
-  }
-  .step-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    position: relative;
-  }
-  .step-item:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    top: 20px;
-    left: 60%;
-    width: 80%;
-    height: 2px;
-    background: #cbd5e1;
-  }
-  .step-icon {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: #eff6ff;
-    border: 2px solid #bfdbfe;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem;
-    margin-bottom: 6px;
-    position: relative;
-    z-index: 1;
-  }
-  .step-label {
-    font-size: clamp(.72rem, 1.9vmin, .8rem);
-    color: #475569;
-    font-weight: 600;
-    line-height: 1.3;
-  }
-
-  /* Structure section */
-  .structure-box {
-    background: #f8fafc;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 1rem 1.2rem;
-    margin-bottom: 0;
-  }
-  .structure-label {
-    font-size: .78rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    color: #64748b;
-    margin-bottom: .7rem;
-  }
-
-  /* Timeline */
-  .timeline {
-    display: flex;
-    align-items: center;
-    gap: 0;
-  }
-  .tl-block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  .tl-bar {
-    height: 28px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(.65rem, 1.7vmin, .75rem);
-    font-weight: 700;
-    color: #fff;
-    padding: 0 6px;
-    white-space: nowrap;
-    min-width: 60px;
-  }
-  .tl-bar.work  { background: #1e40af; }
-  .tl-bar.brk   { background: #64748b; }
+  .steps-row { display: flex; align-items: flex-start; gap: 0; margin-bottom: 1.4rem; }
+  .step-item { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+  .step-item:not(:last-child)::after { content: ''; position: absolute; top: 20px; left: 60%; width: 80%; height: 2px; background: #cbd5e1; }
+  .step-icon { width: 40px; height: 40px; border-radius: 50%; background: #eff6ff; border: 2px solid #bfdbfe; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 6px; position: relative; z-index: 1; }
+  .step-label { font-size: clamp(.72rem, 1.9vmin, .8rem); color: #475569; font-weight: 600; line-height: 1.3; }
+  .structure-box { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 0; }
+  .structure-label { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #64748b; margin-bottom: .7rem; }
+  .timeline { display: flex; align-items: center; gap: 0; }
+  .tl-block { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .tl-bar { height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: clamp(.65rem, 1.7vmin, .75rem); font-weight: 700; color: #fff; padding: 0 6px; white-space: nowrap; min-width: 60px; }
+  .tl-bar.work { background: #1e40af; }
+  .tl-bar.brk  { background: #64748b; }
   .tl-bar.choice { background: #7c3aed; }
-  .tl-cap {
-    font-size: clamp(.62rem, 1.6vmin, .72rem);
-    color: #64748b;
-    margin-top: 4px;
-    font-weight: 500;
-  }
-  .tl-arrow {
-    font-size: 1rem;
-    color: #94a3b8;
-    flex-shrink: 0;
-    padding: 0 4px;
-    margin-bottom: 18px; /* aligns with bar vertical center */
-  }
-
-  /* Footer button */
-  .w-footer {
-    padding: .8rem 1.6rem 1.4rem;
-    text-align: center;
-  }
-  .w-footer button,
-  .w-footer input[type=submit] {
-    padding: 12px 48px;
-    font-size: 1rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 8px;
-    background: #1e40af;
-    color: #fff;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
+  .tl-cap { font-size: clamp(.62rem, 1.6vmin, .72rem); color: #64748b; margin-top: 4px; font-weight: 500; }
+  .tl-arrow { font-size: 1rem; color: #94a3b8; flex-shrink: 0; padding: 0 4px; margin-bottom: 18px; }
+  .w-footer { padding: .8rem 1.6rem 1.4rem; text-align: center; }
+  .w-footer button, .w-footer input[type=submit] { padding: 12px 48px; font-size: 1rem; font-weight: 700; border: none; border-radius: 8px; background: #1e40af; color: #fff; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .w-footer button:active { opacity: .85; }
 </style>
 {{ endblock }}
 
 {{ block content }}
 <div id="welcome-card">
-
   <div class="w-header">
-    <h2>Welcome to your work task!</h2>
-    <p>Here is what to expect:</p>
+    {% if language == 'sw' %}
+      <h2>Karibu katika kazi yako!</h2>
+      <p>Haya ndiyo utakayoyapata:</p>
+    {% else %}
+      <h2>Welcome to your work task!</h2>
+      <p>Here is what to expect:</p>
+    {% endif %}
   </div>
 
   <div class="w-body">
-
-    <!-- What's coming -->
     <div class="steps-row">
       <div class="step-item">
         <div class="step-icon">📖</div>
-        <div class="step-label">Learn<br>the task</div>
+        <div class="step-label">{% if language == 'sw' %}Jifunze<br>kazi{% else %}Learn<br>the task{% endif %}</div>
       </div>
       <div class="step-item">
         <div class="step-icon">🎮</div>
-        <div class="step-label">Try it<br>out</div>
+        <div class="step-label">{% if language == 'sw' %}Jaribu<br>kazi{% else %}Try it<br>out{% endif %}</div>
       </div>
       <div class="step-item">
         <div class="step-icon">💰</div>
-        <div class="step-label">Learn how<br>you get paid</div>
+        <div class="step-label">{% if language == 'sw' %}Jifunze<br>malipo{% else %}Learn how<br>you get paid{% endif %}</div>
       </div>
       <div class="step-item">
         <div class="step-icon">✅</div>
-        <div class="step-label">Do the<br>real task</div>
+        <div class="step-label">{% if language == 'sw' %}Fanya<br>kazi halisi{% else %}Do the<br>real task{% endif %}</div>
       </div>
     </div>
 
-    <!-- Structure -->
     <div class="structure-box">
-      <div class="structure-label">Your work schedule today</div>
+      <div class="structure-label">{% if language == 'sw' %}Ratiba yako ya kazi leo{% else %}Your work schedule today{% endif %}</div>
 
       {% if condition == 'no_break' %}
       <div class="timeline">
         <div class="tl-block" style="flex:9">
-          <div class="tl-bar work">90 min — Work</div>
-          <div class="tl-cap">Continuous work session without a break. Task will be split up in three consecutive sessions: 40 min, 10 min, 40 min.</div>
+          <div class="tl-bar work">{% if language == 'sw' %}Dakika 90 — Kazi{% else %}90 min — Work{% endif %}</div>
+          <div class="tl-cap">{% if language == 'sw' %}Kipindi cha kazi kinachoendelea bila mapumziko. Kazi itagawanywa katika vipindi vitatu mfululizo: dakika 40, dakika 10, dakika 40.{% else %}Continuous work session without a break. Task will be split up in three consecutive sessions: 40 min, 10 min, 40 min.{% endif %}</div>
         </div>
       </div>
 
       {% elif condition == 'forced_break' %}
       <div class="timeline">
         <div class="tl-block" style="flex:4">
-          <div class="tl-bar work">{{ task_minutes }} min</div>
-          <div class="tl-cap">Work</div>
+          <div class="tl-bar work">{% if language == 'sw' %}Dak. {{ task_minutes }}{% else %}{{ task_minutes }} min{% endif %}</div>
+          <div class="tl-cap">{% if language == 'sw' %}Kazi{% else %}Work{% endif %}</div>
         </div>
         <div class="tl-arrow">›</div>
         <div class="tl-block" style="flex:1">
-          <div class="tl-bar brk">{{ break_minutes }} min</div>
-          <div class="tl-cap">Break</div>
+          <div class="tl-bar brk">{% if language == 'sw' %}Dak. {{ break_minutes }}{% else %}{{ break_minutes }} min{% endif %}</div>
+          <div class="tl-cap">{% if language == 'sw' %}Mapumziko{% else %}Break{% endif %}</div>
         </div>
         <div class="tl-arrow">›</div>
         <div class="tl-block" style="flex:4">
-          <div class="tl-bar work">{{ task_minutes }} min</div>
-          <div class="tl-cap">Work</div>
+          <div class="tl-bar work">{% if language == 'sw' %}Dak. {{ task_minutes }}{% else %}{{ task_minutes }} min{% endif %}</div>
+          <div class="tl-cap">{% if language == 'sw' %}Kazi{% else %}Work{% endif %}</div>
         </div>
       </div>
 
       {% else %}
       <div class="timeline">
         <div class="tl-block" style="flex:4">
-          <div class="tl-bar work">{{ task_minutes }} min</div>
-          <div class="tl-cap">Work</div>
+          <div class="tl-bar work">{% if language == 'sw' %}Dak. {{ task_minutes }}{% else %}{{ task_minutes }} min{% endif %}</div>
+          <div class="tl-cap">{% if language == 'sw' %}Kazi{% else %}Work{% endif %}</div>
         </div>
         <div class="tl-arrow">›</div>
         <div class="tl-block" style="flex:1">
-          <div class="tl-bar choice">{{ break_minutes }} min</div>
-          <div class="tl-cap">Your choice: break or work</div>
+          <div class="tl-bar choice">{% if language == 'sw' %}Dak. {{ break_minutes }}{% else %}{{ break_minutes }} min{% endif %}</div>
+          <div class="tl-cap">{% if language == 'sw' %}Chaguo lako: mapumziko au kazi{% else %}Your choice: break or work{% endif %}</div>
         </div>
         <div class="tl-arrow">›</div>
         <div class="tl-block" style="flex:4">
-          <div class="tl-bar work">{{ task_minutes }} min</div>
-          <div class="tl-cap">Work</div>
+          <div class="tl-bar work">{% if language == 'sw' %}Dak. {{ task_minutes }}{% else %}{{ task_minutes }} min{% endif %}</div>
+          <div class="tl-cap">{% if language == 'sw' %}Kazi{% else %}Work{% endif %}</div>
         </div>
       </div>
       {% endif %}
-
     </div>
-
   </div>
 
   <div class="w-footer">
     {{ next_button }}
   </div>
-
 </div>
 {{ endblock }}

@@ -27,13 +27,68 @@
   .field-label {
     font-weight: 600;
     color: #1e293b;
-    margin-bottom: .4rem;
+    margin-bottom: .6rem;
     font-size: .95rem;
+    display: block;
   }
   .field-hint {
     font-size: .82rem;
     color: #64748b;
     margin-bottom: .8rem;
+  }
+
+  /* ── Language radio buttons styled as a toggle ─────────────── */
+
+  /* Hide oTree's own label for the language field */
+  #checkin-card label[for=id_language] { display: none; }
+
+  /* The RadioSelect renders a div containing form-check divs.
+     We turn those into a side-by-side toggle. */
+  #id_language {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.4rem;
+  }
+  #id_language .form-check {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+  }
+  /* Hide the raw radio input visually but keep it in the DOM for submission */
+  #id_language .form-check input[type=radio] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  /* Style the label as a toggle button */
+  #id_language .form-check label {
+    display: block;
+    width: 100%;
+    padding: 12px 8px;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    background: #fff;
+    font-weight: 600;
+    font-size: .95rem;
+    color: #475569;
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  /* Active state when the radio is checked */
+  #id_language .form-check input[type=radio]:checked + label {
+    border-color: #1e40af;
+    background: #eff6ff;
+    color: #1e40af;
+  }
+
+  /* ── Field ID input ────────────────────────────────────────── */
+  .section-divider {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 1.4rem 0;
   }
 
   #checkin-card input[type=text] {
@@ -47,9 +102,11 @@
     border-radius: 8px;
     outline: none;
     transition: border-color .15s;
+    box-sizing: border-box;
   }
   #checkin-card input[type=text]:focus { border-color: #1e40af; }
 
+  /* ── Submit button ─────────────────────────────────────────── */
   #checkin-card .card-footer {
     padding: 1rem 2rem 1.5rem;
     text-align: center;
@@ -76,14 +133,28 @@
 <div id="checkin-card">
 
   <div class="card-header">
-    <h4>Participant Check-In</h4>
-    <p>Please enter the ID given to you by the research team.</p>
+    <h4>Participant Check-In &nbsp;/&nbsp; Uthibitisho wa Mshiriki</h4>
+    <p>Select language and enter your ID.<br>
+       Chagua lugha na ingiza nambari yako.</p>
   </div>
 
   <div class="card-body">
-    <p class="field-label">Field ID</p>
-    <p class="field-hint">Enter the 4-digit code from your participant card (e.g. 1011, 2154, 3023).</p>
+
+    <span class="field-label">Language / Lugha</span>
+
+    <!-- oTree renders the language RadioSelect here.
+         CSS above turns it into a styled toggle. -->
     {{ formfields }}
+
+    <hr class="section-divider">
+
+    <!-- Field ID is rendered inside formfields above already.
+         We add the hint below the divider with JS. -->
+    <p class="field-hint" id="fid-hint">
+      Enter the 4-digit code from your participant card (e.g. 1011, 2154, 3023).<br>
+      Ingiza nambari ya tarakimu 4 kutoka kwa kadi yako ya mshiriki.
+    </p>
+
   </div>
 
   <div class="card-footer">
@@ -91,4 +162,19 @@
   </div>
 
 </div>
+
+<script>
+/* Move the Field ID hint to appear above the input, after the divider */
+document.addEventListener('DOMContentLoaded', function () {
+  var fidInput = document.querySelector('input[name=field_id]');
+  if (!fidInput) return;
+  var fidRow = fidInput.closest('.controls') || fidInput.closest('.form-group') || fidInput.parentElement;
+  var divider = document.querySelector('.section-divider');
+  var hint    = document.getElementById('fid-hint');
+  if (fidRow && divider) {
+    divider.parentNode.insertBefore(hint, divider.nextSibling);
+    divider.parentNode.insertBefore(fidRow, hint.nextSibling);
+  }
+});
+</script>
 {{ endblock }}

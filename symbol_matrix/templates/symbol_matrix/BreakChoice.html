@@ -1,4 +1,4 @@
-{{ block title }}End of Session 1{{ endblock }}
+{{ block title }}{% if language == 'sw' %}Mwisho wa Kipindi cha 1{% else %}End of Session 1{% endif %}{{ endblock }}
 
 {{ block content }}
 
@@ -62,6 +62,40 @@
   <div class="row justify-content-center">
     <div class="col-md-8">
 
+      {% if language == 'sw' %}
+      <h4 class="text-center mb-1">Kipindi cha 1 kimekamilika!</h4>
+      <p class="text-center text-muted mb-4" style="font-size:.95rem;">
+        Umekamilisha sehemu ya kwanza ya kipindi chako cha kazi. Tafadhali chagua ungependa nini kifuate. <br><br>
+        Tafadhali kumbuka kwamba chaguo unalofanya litashirikiwa na meneja wa kuajiri anayehusika na kuamua ni nani atakayealikwa kurudi kwa kazi nyingine.
+      </p>
+
+      <div class="row g-3">
+        <div class="col-6 d-flex">
+          <div class="choice-card" id="card-break" onclick="choose(true)">
+            <div class="choice-icon">😴</div>
+            <div class="choice-title">Chukua mapumziko ya dakika 10</div>
+            <div class="choice-desc">
+              Skrini itafungwa kwa <strong>dakika {{ break_minutes }}</strong> na <strong>hutaweza</strong>
+              kufanya kazi au kupata pesa wakati huo.
+              Unaweza kutumia wakati huu kusimama na kupumzika katika chumba cha mapumziko.
+            </div>
+          </div>
+        </div>
+        <div class="col-6 d-flex">
+          <div class="choice-card" id="card-work" onclick="choose(false)">
+            <div class="choice-icon">💪</div>
+            <div class="choice-title">Fanya kazi dakika 10 zaidi</div>
+            <div class="choice-desc">
+              Utaendelea kufanya kazi na kupata pesa wakati wa <strong>dakika {{ break_minutes }}</strong>. Hutakuwa na mapumziko wakati wa kipindi cha kazi.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" id="confirm-btn" style="display:none;">
+        Thibitisha chaguo langu &rarr;
+      </button>
+      {% else %}
       <h4 class="text-center mb-1">Session 1 complete!</h4>
       <p class="text-center text-muted mb-4" style="font-size:.95rem;">
         You have completed the first part of your work session. Please choose what you would like to happen next. <br><br>
@@ -94,6 +128,7 @@
       <button type="submit" id="confirm-btn" style="display:none;">
         Confirm my choice &rarr;
       </button>
+      {% endif %}
 
     </div>
   </div>

@@ -1,4 +1,4 @@
-{{ block title }}Practice Round{{ endblock }}
+{{ block title }}{% if language == 'sw' %}Raundi ya Mazoezi{% else %}Practice Round{% endif %}{{ endblock }}
 
 {{ block styles }}
 <link rel="stylesheet" href="/static/katex/katex.min.css">
@@ -167,7 +167,7 @@
 
   <div id="banner">
     <span id="b-icon">🧪</span>
-    <span id="b-text">Practice round</span>
+    <span id="b-text">{% if language == 'sw' %}Raundi ya mazoezi{% else %}Practice round{% endif %}</span>
   </div>
 
   <div id="inner-card">
@@ -175,14 +175,14 @@
 
     <div id="task-container">
       <div id="target-row">
-        <span class="task-prompt">Find all matching symbols:</span>
+        <span class="task-prompt">{% if language == 'sw' %}Tafuta alama zote zinazofanana:{% else %}Find all matching symbols:{% endif %}</span>
         <div id="demo-target"></div>
       </div>
       <div id="grid-wrapper">
         <div id="demo-grid"></div>
       </div>
       <button type="button" id="confirm-btn">
-        &#10003;&nbsp;&nbsp;Confirm Selection
+        &#10003;&nbsp;&nbsp;{% if language == 'sw' %}Thibitisha Uteuzi{% else %}Confirm Selection{% endif %}
       </button>
     </div>
   </div>
@@ -193,6 +193,7 @@
 
 <script src="/static/katex/katex.min.js"></script>
 <script>
+var _lang = '{{ language }}';
 // liveRecv must be global for oTree
 var _trial    = 0;
 var _selected = new Set();
@@ -257,11 +258,11 @@ function showTask(task, feedbackState) {
   document.getElementById('confirm-btn').disabled = false;
 
   if (feedbackState === 'correct') {
-    setBanner('well-done', '✅', 'Well done! Try once more before we begin.');
+    setBanner('well-done', '✅', _lang === 'sw' ? 'Vizuri sana! Jaribu tena kabla hatujaanza.' : 'Well done! Try once more before we begin.');
   } else if (feedbackState === 'wrong') {
-    setBanner('wrong-ans', '❌', 'Not quite — but keep going, the real task works the same way.');
+    setBanner('wrong-ans', '❌', _lang === 'sw' ? 'Si sahihi kabisa — lakini endelea, kazi halisi inafanya kazi kwa njia hiyo hiyo.' : 'Not quite — but keep going, the real task works the same way.');
   } else {
-    setBanner('neutral', '🧪', 'Practice round');
+    setBanner('neutral', '🧪', _lang === 'sw' ? 'Raundi ya mazoezi' : 'Practice round');
   }
 
   requestAnimationFrame(sizeGrid);
@@ -278,9 +279,9 @@ function liveRecv(data) {
   if (data.type === 'practice_complete') {
     // Brief banner before auto-advancing
     if (data.is_correct) {
-      setBanner('well-done', '✅', 'Well done! Moving on…');
+      setBanner('well-done', '✅', _lang === 'sw' ? 'Vizuri sana! Tunaendelea…' : 'Well done! Moving on…');
     } else {
-      setBanner('wrong-ans', '❌', 'Not quite — moving on to the real task.');
+      setBanner('wrong-ans', '❌', _lang === 'sw' ? 'Si sahihi kabisa — tunaendelea kwa kazi halisi.' : 'Not quite — moving on to the real task.');
     }
     setTimeout(function() {
       var real = document.querySelector('#real-next button, #real-next input[type=submit]');
@@ -301,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.dcell').forEach(function(c) { c.classList.add('locked'); });
     document.getElementById('task-container').style.display = 'none';
     document.getElementById('loading-msg').style.display    = '';
-    setBanner('neutral', '🧪', 'Practice round');
+    setBanner('neutral', '🧪', _lang === 'sw' ? 'Raundi ya mazoezi' : 'Practice round');
 
     liveSend({
       type:          'submit_practice',

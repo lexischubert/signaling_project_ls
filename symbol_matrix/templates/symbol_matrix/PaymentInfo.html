@@ -1,126 +1,52 @@
-{{ block title }}Payment{{ endblock }}
+{{ block title }}{% if language == 'sw' %}Malipo{% else %}Payment{% endif %}{{ endblock }}
 
 {{ block styles }}
 <style>
-  /* Hide oTree's own timeout bar */
   #otree-timeout { display: none !important; }
-
-  body { background: #f8f9fa; }
-
-  body { overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
-
-  #start-card {
-    max-width: 700px;
-    margin: 1rem auto;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 14px rgba(0,0,0,.10);
-    padding: 1.2rem 1.4rem 1.4rem;
-    text-align: center;
-  }
-
-  h2 {
-    font-size: clamp(1.3rem, 4vmin, 1.8rem);
-    font-weight: 800;
-    color: #1e293b;
-    margin: 0 0 .9rem;
-  }
-
-  .reminder-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1rem;
-    text-align: left;
-  }
-  .reminder-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 7px 10px;
-    border-radius: 7px;
-    background: #f1f5f9;
-    margin-bottom: 6px;
-    font-size: clamp(.82rem, 2.2vmin, .93rem);
-    color: #1e293b;
-    font-weight: 500;
-    line-height: 1.35;
-  }
+  body { background: #f8f9fa; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
+  #start-card { max-width: 700px; margin: 1rem auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 14px rgba(0,0,0,.10); padding: 1.2rem 1.4rem 1.4rem; text-align: center; }
+  h2 { font-size: clamp(1.3rem, 4vmin, 1.8rem); font-weight: 800; color: #1e293b; margin: 0 0 .9rem; }
+  .reminder-list { list-style: none; padding: 0; margin: 0 0 1rem; text-align: left; }
+  .reminder-list li { display: flex; align-items: flex-start; gap: 8px; padding: 7px 10px; border-radius: 7px; background: #f1f5f9; margin-bottom: 6px; font-size: clamp(.82rem, 2.2vmin, .93rem); color: #1e293b; font-weight: 500; line-height: 1.35; }
   .reminder-list li .ico { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
-
-  #next-btn {
-    width: 100%;
-    padding: clamp(10px, 2vmin, 14px);
-    font-size: clamp(.95rem, 2.8vmin, 1.1rem);
-    font-weight: 700;
-    border: none;
-    border-radius: 8px;
-    background: #0d6efd;
-    color: #fff;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    margin-bottom: 8px;
-  }
+  #next-btn { width: 100%; padding: clamp(10px, 2vmin, 14px); font-size: clamp(.95rem, 2.8vmin, 1.1rem); font-weight: 700; border: none; border-radius: 8px; background: #0d6efd; color: #fff; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; margin-bottom: 8px; }
   #next-btn:active { opacity: .85; }
-  #next-btn:focus  { outline: none; }
-
-  button { user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
-  button:focus { outline: none; caret-color: transparent; }
+  button { user-select: none; -webkit-user-select: none; }
 </style>
 {{ endblock }}
 
 {{ block content }}
 <div id="start-card">
+  {% if language == 'sw' %}
+    <h2>Jinsi utakavyolipwa</h2>
+    <ul class="reminder-list">
+      <li><span class="ico">💰</span> Utapokea malipo ya ushiriki ya kawaida ya <strong>Ksh 350</strong> ukikamilisha kazi nzima hadi mwisho.</li>
+      <li><span class="ico">✅</span> Unaweza kupata bonasi kulingana na <strong>kasi na usahihi</strong> wako. Kwa kila gridi uliyokamilisha kwa usahihi, utapata <strong>Ksh 1</strong>.</li>
+      <li><span class="ico">📱</span> Mapato yako yatalipwa kupitia <strong>M-PESA</strong>.</li>
+      <li><span class="ico">🕐</span> Malipo yatafika ndani ya <strong>siku 2 zijazo</strong>.</li>
+      <li><span class="ico">💼</span> Tutakuambia kuhusu uwezekano wa kuajiriwa tena ukurasa unaofuata.</li>
+    </ul>
+  {% else %}
+    <h2>How you will get paid</h2>
+    <ul class="reminder-list">
+      <li><span class="ico">💰</span> You will receive a fixed participation payment of <strong>Ksh 350</strong> if you complete the entire task until the end.</li>
+      <li><span class="ico">✅</span> You can earn bonus payments that will depend on your <strong>speed and accuracy</strong>. For each correctly completed grid, you can earn <strong>Ksh 1</strong>.</li>
+      <li><span class="ico">📱</span> Your earnings will be paid via <strong>M-PESA</strong>.</li>
+      <li><span class="ico">🕐</span> Payments will arrive within <strong>the next 2 days</strong>.</li>
+      <li><span class="ico">💼</span> We will tell you about possibilities of being rehired on the next page.</li>
+    </ul>
+  {% endif %}
 
-  <h2>How you will get paid</h2>
-
-  <ul class="reminder-list">
-    <li>
-      <span class="ico">💰</span>
-      <!-- Placeholder: base participation payment -->
-      You will receive a fixed participation payment of <strong>Ksh 350</strong> if you complete the entire task until the end.
-    </li>
-    <li>
-      <span class="ico">✅</span>
-      <!-- Placeholder: bonus payment description -->
-      You can earn bonus payments that will depend on your <strong>speed and accuracy</strong>. For each correctly completed grid, you can earn <strong>Ksh 1</strong>.
-    </li>
-    <li>
-      <span class="ico">📱</span>
-      <!-- Placeholder: payment method -->
-      Your earnings will be paid via <strong>M-PESA</strong>.
-    </li>
-    <li>
-      <span class="ico">🕐</span>
-      <!-- Placeholder: payment timing -->
-      Payments will arrive within <strong>the next 2 days</strong>.
-    </li>
-    <li>
-      <span class="ico">💼</span>
-      <!-- Placeholder: future work -->
-      We will tell you about possibilities of being rehired on the next page.
-    </li>
-  </ul>
-
-  <button type="button" id="next-btn">Next &rarr;</button>
-
+  <button type="button" id="next-btn">{% if language == 'sw' %}Ifuatayo{% else %}Next{% endif %} &rarr;</button>
 </div>
 
-<!-- Hidden oTree next button -->
 <div style="display:none;">{{ next_button }}</div>
-
 <script>
-(function () {
-  function advance() {
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('next-btn').addEventListener('click', function () {
     var btn = document.querySelector('button[type=submit], input[type=submit]');
-    if (btn) { btn.click(); return; }
-    var hidden = document.querySelector('[style*="display:none"] button, [style*="display:none"] input');
-    if (hidden) hidden.click();
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('next-btn').addEventListener('click', advance);
+    if (btn) btn.click();
   });
-}());
+});
 </script>
 {{ endblock }}

@@ -1,4 +1,4 @@
-{{ block title }}Symbol Task{{ endblock }}
+{{ block title }}{% if language == 'sw' %}Kazi ya Alama{% else %}Symbol Task{% endif %}{{ endblock }}
 
 {{ block styles }}
 <link rel="stylesheet" href="/static/katex/katex.min.css">
@@ -163,7 +163,7 @@
   </div>
 
   <div id="target-row">
-    <span id="task-prompt">Find all matching symbols in the grid:</span>
+    <span id="task-prompt">{% if language == 'sw' %}Tafuta alama zote zinazofanana kwenye gridi:{% else %}Find all matching symbols in the grid:{% endif %}</span>
     <div id="target-display"></div>
   </div>
 
@@ -173,7 +173,7 @@
   </div>
 
   <button type="button" id="confirm-btn" disabled>
-    ✓&nbsp;&nbsp;Confirm Selection
+    ✓&nbsp;&nbsp;{% if language == 'sw' %}Thibitisha Uteuzi{% else %}Confirm Selection{% endif %}
   </button>
 
 </div>

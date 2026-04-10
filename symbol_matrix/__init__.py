@@ -127,9 +127,14 @@ class Player(BasePlayer):
     # $3 show-up fee + $0.01 per credit
     final_payoff_dollars = models.FloatField(initial=0.0)
 
-    # ----- Language (derived from session config) -----
-    # 'en' = English, 'sw' = Swahili
-    language = models.StringField(initial='en')
+    # ----- Language (chosen by participant on Field ID entry screen) -----
+    # 'en' = English, 'sw' = Kiswahili
+    language = models.StringField(
+        label='Language / Lugha',
+        choices=[['en', 'English'], ['sw', 'Kiswahili']],
+        initial='en',
+        widget=widgets.RadioSelect,
+    )
 
     # ----- Field ID (entered by participant at check-in) -----
     # 4-digit code: digit 1 = break condition (1/2/3), digit 2 = treatment (1/2), digits 3-4 = participant number
@@ -859,15 +864,12 @@ def custom_export(players):
 
 
 # ---------------------------------------------------------------------------
-# Language routing helper
+# Language helper
 # ---------------------------------------------------------------------------
 
-def _tpl(player, name):
-    """Return the localised template path for a given page name."""
-    lang = player.session.config.get('language', 'en')
-    if lang == 'sw':
-        return 'symbol_matrix/{}_swa.html'.format(name)
-    return 'symbol_matrix/{}.html'.format(name)
+def _lang(player):
+    """Return the participant's chosen language ('en' or 'sw')."""
+    return player.field_maybe_none('language') or 'en'
 
 
 # ---------------------------------------------------------------------------
@@ -875,9 +877,6 @@ def _tpl(player, name):
 # ---------------------------------------------------------------------------
 
 class Welcome(Page):
-    def get_template_names(self):
-        return [_tpl(self.player, 'Welcome')]
-
     @staticmethod
     def vars_for_template(player):
         return {
@@ -885,6 +884,7 @@ class Welcome(Page):
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
             'task_type':     player.session.config.get('task_type', ''),
             'condition':     player.field_maybe_none('condition') or 'choice',
+            'language':      _lang(player),
         }
 
 
@@ -936,9 +936,6 @@ class BreakChoice(Page):
     form_model  = 'player'
     form_fields = ['break_choice']
 
-    def get_template_names(self):
-        return [_tpl(self.player, 'BreakChoice')]
-
     @staticmethod
     def is_displayed(player):
         return (player.session.config.get('task_type') == 'matrix'
@@ -949,6 +946,7 @@ class BreakChoice(Page):
         return {
             'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
+            'language':      _lang(player),
         }
 
     @staticmethod
@@ -957,9 +955,6 @@ class BreakChoice(Page):
 
 
 class BreakWait(Page):
-    def get_template_names(self):
-        return [_tpl(self.player, 'BreakWait')]
-
     @staticmethod
     def is_displayed(player):
         return player.field_maybe_none('break_choice') == True
@@ -970,7 +965,7 @@ class BreakWait(Page):
 
     @staticmethod
     def vars_for_template(player):
-        return {'duration_seconds': _break_duration(player)}
+        return {'duration_seconds': _break_duration(player), 'language': _lang(player)}
 
     @staticmethod
     def before_next_page(player, timeout_happened):
@@ -1264,9 +1259,6 @@ def _matrix_practice_live_method(player, data):
 # ---------------------------------------------------------------------------
 
 class MatrixInstructions(Page):
-    def get_template_names(self):
-        return [_tpl(self.player, 'MatrixInstructions')]
-
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
@@ -1281,18 +1273,20 @@ class MatrixInstructions(Page):
             'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
             'condition':     player.field_maybe_none('condition') or 'choice',
+            'language':      _lang(player),
         }
 
 
 class MatrixPractice(Page):
     """Two free-form practice trials — no data recorded, no hints."""
 
-    def get_template_names(self):
-        return [_tpl(self.player, 'MatrixPractice')]
-
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
+
+    @staticmethod
+    def vars_for_template(player):
+        return {'language': _lang(player)}
 
     @staticmethod
     def live_method(player, data):
@@ -1302,9 +1296,6 @@ class MatrixPractice(Page):
 class PaymentInfo(Page):
     """Payment information screen — shown after instructions, before the task starts."""
 
-    def get_template_names(self):
-        return [_tpl(self.player, 'PaymentInfo')]
-
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
@@ -1316,15 +1307,13 @@ class PaymentInfo(Page):
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
             'condition':     player.field_maybe_none('condition') or 'choice',
             'treat':         player.field_maybe_none('treat') or 'no_treat',
+            'language':      _lang(player),
         }
 
 
 class FutureWork(Page):
     """Future work / re-hire information — content varies by treat vs no_treat."""
 
-    def get_template_names(self):
-        return [_tpl(self.player, 'FutureWork')]
-
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
@@ -1336,14 +1325,12 @@ class FutureWork(Page):
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
             'condition':     player.field_maybe_none('condition') or 'choice',
             'treat':         player.field_maybe_none('treat') or 'no_treat',
+            'language':      _lang(player),
         }
 
 
 class MatrixStartScreen(Page):
     """Pre-task reminder screen — participant clicks Start to begin."""
-
-    def get_template_names(self):
-        return [_tpl(self.player, 'MatrixStartScreen')]
 
     @staticmethod
     def is_displayed(player):
@@ -1355,14 +1342,12 @@ class MatrixStartScreen(Page):
             'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
             'condition':     player.field_maybe_none('condition') or 'choice',
+            'language':      _lang(player),
         }
 
 
 class MatrixTask(Page):
     """Segment 1 of the matrix task (before the break / bridge)."""
-
-    def get_template_names(self):
-        return [_tpl(self.player, 'MatrixTask')]
 
     @staticmethod
     def is_displayed(player):
@@ -1375,9 +1360,9 @@ class MatrixTask(Page):
     @staticmethod
     def vars_for_template(player):
         player.matrix_start_time = time.time()
-        lang = player.session.config.get('language', 'en')
+        lang = _lang(player)
         label = 'Kipindi cha 1 kati ya 2' if lang == 'sw' else 'Session 1 of 2'
-        return {'duration_seconds': _task_duration(player), 'block_label': label}
+        return {'duration_seconds': _task_duration(player), 'block_label': label, 'language': lang}
 
     @staticmethod
     def live_method(player, data):
@@ -1395,9 +1380,6 @@ class MatrixTask(Page):
 class MatrixBridgeTask(Page):
     """Bridge segment for participants who skip the break (same task UI, no timer)."""
 
-    def get_template_names(self):
-        return [_tpl(self.player, 'MatrixTask')]
-
     @staticmethod
     def is_displayed(player):
         return (player.session.config.get('task_type') == 'matrix'
@@ -1410,9 +1392,9 @@ class MatrixBridgeTask(Page):
     @staticmethod
     def vars_for_template(player):
         player.bridge_start_time = time.time()
-        lang = player.session.config.get('language', 'en')
+        lang = _lang(player)
         label = 'Endelea Kufanya Kazi' if lang == 'sw' else 'Continue working'
-        return {'duration_seconds': _break_duration(player), 'block_label': label}
+        return {'duration_seconds': _break_duration(player), 'block_label': label, 'language': lang}
 
     @staticmethod
     def live_method(player, data):
@@ -1421,9 +1403,6 @@ class MatrixBridgeTask(Page):
 
 class MatrixTask2(Page):
     """Segment 2 of the matrix task (after break / bridge)."""
-
-    def get_template_names(self):
-        return [_tpl(self.player, 'MatrixTask')]
 
     @staticmethod
     def is_displayed(player):
@@ -1436,9 +1415,9 @@ class MatrixTask2(Page):
     @staticmethod
     def vars_for_template(player):
         player.matrix2_start_time = time.time()
-        lang = player.session.config.get('language', 'en')
+        lang = _lang(player)
         label = 'Kipindi cha 2 kati ya 2' if lang == 'sw' else 'Session 2 of 2'
-        return {'duration_seconds': _task_duration(player), 'block_label': label}
+        return {'duration_seconds': _task_duration(player), 'block_label': label, 'language': lang}
 
     @staticmethod
     def live_method(player, data):
@@ -1446,8 +1425,6 @@ class MatrixTask2(Page):
 
 
 class Goodbye(Page):
-    def get_template_names(self):
-        return [_tpl(self.player, 'Goodbye')]
 
     @staticmethod
     def vars_for_template(player):
@@ -1503,6 +1480,7 @@ class Goodbye(Page):
             'condition':         player.field_maybe_none('condition') or 'choice',
             'task_minutes':      player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
             'break_minutes':     player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
+            'language':          _lang(player),
         }
 
 
@@ -1511,14 +1489,12 @@ class Goodbye(Page):
 # ---------------------------------------------------------------------------
 
 class FieldIDEntry(Page):
-    """First screen: participant enters their field ID (assigned by the research team)."""
+    """First screen: participant enters their field ID and selects language."""
     form_model  = 'player'
-    form_fields = ['field_id']
+    form_fields = ['language', 'field_id']
 
+    # Always served in English — it's the page where language is chosen
     def get_template_names(self):
-        lang = self.player.session.config.get('language', 'en')
-        if lang == 'sw':
-            return ['symbol_matrix/FieldIDEntry_swa.html']
         return ['symbol_matrix/FieldIDEntry.html']
 
     @staticmethod
@@ -1537,19 +1513,16 @@ class FieldIDEntry(Page):
 
     @staticmethod
     def before_next_page(player, timeout_happened):
+        # player.language is already set by the form submission
         player.field_id  = player.field_id.strip()
         player.condition = _get_condition(player)
         player.treat     = _get_treat(player)
-        player.language  = player.session.config.get('language', 'en')
 
 
 class Consent(Page):
     """Informed consent — must tick checkbox to proceed."""
     form_model  = 'player'
     form_fields = ['consented']
-
-    def get_template_names(self):
-        return [_tpl(self.player, 'Consent')]
 
     @staticmethod
     def is_displayed(player):
@@ -1564,6 +1537,7 @@ class Consent(Page):
             'break_minutes':      break_minutes,
             'seg1_total_minutes': task_minutes + break_minutes,
             'condition':          player.field_maybe_none('condition') or 'choice',
+            'language':           _lang(player),
         }
 
     @staticmethod
@@ -1586,12 +1560,13 @@ class Demographics(Page):
         'demo_income', 'demo_hours_slept', 'demo_breakfast',
     ]
 
-    def get_template_names(self):
-        return [_tpl(self.player, 'Demographics')]
-
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
+
+    @staticmethod
+    def vars_for_template(player):
+        return {'language': _lang(player)}
 
     @staticmethod
     def before_next_page(player, timeout_happened):

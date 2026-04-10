@@ -1,4 +1,4 @@
-{{ block title }}Short Survey{{ endblock }}
+{{ block title }}{% if language == 'sw' %}Dodoso Fupi{% else %}Short Survey{% endif %}{{ endblock }}
 
 {{ block styles }}
 <style>
@@ -83,8 +83,13 @@
   <div class="demo-card">
 
     <div class="d-header">
+      {% if language == 'sw' %}
+      <h4>Karibu kumaliza — maswali machache ya haraka</h4>
+      <p>Maswali haya yanachukua dakika 5. Majibu yako yanashikiliwa kwa siri.</p>
+      {% else %}
       <h4>Almost done — a few quick questions</h4>
       <p>These questions take about 5 minutes. Your answers are kept strictly confidential.</p>
+      {% endif %}
     </div>
 
     <div class="d-body">

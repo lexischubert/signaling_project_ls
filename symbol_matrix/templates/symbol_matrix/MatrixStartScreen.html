@@ -1,142 +1,65 @@
-{{ block title }}Ready to begin{{ endblock }}
+{{ block title }}{% if language == 'sw' %}Uko Tayari Kuanza{% else %}Ready to begin{% endif %}{{ endblock }}
 
 {{ block styles }}
 <style>
-  /* Hide oTree's own timeout bar */
   #otree-timeout { display: none !important; }
-
-  body { background: #f8f9fa; }
-
-  body { overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
-
-  #start-card {
-    max-width: 700px;
-    margin: 1rem auto;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 14px rgba(0,0,0,.10);
-    padding: 1.2rem 1.4rem 1.4rem;
-    text-align: center;
-  }
-
-  h2 {
-    font-size: clamp(1.3rem, 4vmin, 1.8rem);
-    font-weight: 800;
-    color: #1e293b;
-    margin: 0 0 .9rem;
-  }
-
-  .reminder-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1rem;
-    text-align: left;
-  }
-  .reminder-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 7px 10px;
-    border-radius: 7px;
-    background: #f1f5f9;
-    margin-bottom: 6px;
-    font-size: clamp(.82rem, 2.2vmin, .93rem);
-    color: #1e293b;
-    font-weight: 500;
-    line-height: 1.35;
-  }
+  body { background: #f8f9fa; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
+  #start-card { max-width: 700px; margin: 1rem auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 14px rgba(0,0,0,.10); padding: 1.2rem 1.4rem 1.4rem; text-align: center; }
+  h2 { font-size: clamp(1.3rem, 4vmin, 1.8rem); font-weight: 800; color: #1e293b; margin: 0 0 .9rem; }
+  .reminder-list { list-style: none; padding: 0; margin: 0 0 1rem; text-align: left; }
+  .reminder-list li { display: flex; align-items: flex-start; gap: 8px; padding: 7px 10px; border-radius: 7px; background: #f1f5f9; margin-bottom: 6px; font-size: clamp(.82rem, 2.2vmin, .93rem); color: #1e293b; font-weight: 500; line-height: 1.35; }
   .reminder-list li .ico { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
-
-  #start-btn {
-    width: 100%;
-    padding: clamp(10px, 2vmin, 14px);
-    font-size: clamp(.95rem, 2.8vmin, 1.1rem);
-    font-weight: 700;
-    border: none;
-    border-radius: 8px;
-    background: #0d6efd;
-    color: #fff;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    animation: btn-pulse 1.1s infinite;
-    margin-bottom: 8px;
-  }
-  @keyframes btn-pulse {
-    0%   { box-shadow: 0 0 0 0   rgba(13,110,253,.6); }
-    70%  { box-shadow: 0 0 0 14px rgba(13,110,253,0); }
-    100% { box-shadow: 0 0 0 0   rgba(13,110,253,0); }
-  }
+  #start-btn { width: 100%; padding: clamp(10px, 2vmin, 14px); font-size: clamp(.95rem, 2.8vmin, 1.1rem); font-weight: 700; border: none; border-radius: 8px; background: #0d6efd; color: #fff; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; animation: btn-pulse 1.1s infinite; margin-bottom: 8px; }
+  @keyframes btn-pulse { 0% { box-shadow: 0 0 0 0 rgba(13,110,253,.6); } 70% { box-shadow: 0 0 0 14px rgba(13,110,253,0); } 100% { box-shadow: 0 0 0 0 rgba(13,110,253,0); } }
   #start-btn:active { opacity: .85; }
-  #start-btn:focus  { outline: none; }
-
-  button { user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
-  button:focus { outline: none; caret-color: transparent; }
+  button { user-select: none; -webkit-user-select: none; }
 </style>
 {{ endblock }}
 
 {{ block content }}
 <div id="start-card">
-
-  <h2>Ready? Let's review and then begin!</h2>
-
-  <ul class="reminder-list">
-    <li>
-      <span class="ico">⏱</span>
-      You will now start the first work session for <strong>{{ task_minutes }} minutes</strong>.
-    </li>
-    {% if condition == 'no_break' %}
-    <li>
-      <span class="ico">➡️</span>
-      After {{ task_minutes }} minutes you will <strong>continue working</strong>
-      for {{ break_minutes }} more minute{% if break_minutes != 1 %}s{% endif %}, then do the final {{ task_minutes }}-minute session.
-    </li>
-    {% elif condition == 'forced_break' %}
-    <li>
-      <span class="ico">☕</span>
-      After {{ task_minutes }} minutes you will take a
-      <strong>required {{ break_minutes }}-minute break</strong> before working for another {{ task_minutes }}-minute session.
-    </li>
-    {% else %}
-    <li>
-      <span class="ico">☕</span>
-      After {{ task_minutes }} minutes you can <strong>choose</strong> to take a
-      {{ break_minutes }}-minute break or continue working before working for another {{ task_minutes }}-minute session.
-    </li>
-    {% endif %}
-    <li>
-      <span class="ico">💰</span>
-      The <strong>more tasks you finish correctly</strong>, the higher your payoff.
-    </li>
-    <li>
-      <span class="ico">➡️</span>
-      Don't forget to hit <strong>Confirm Selection</strong> to keep moving from grid to grid.
-    </li>
-    <li>
-      <span class="ico">🔇</span>
-      No feedback is given after each grid — do your best, and move on. Remember that both speed and accuracy matter.
-    </li>
-  </ul>
-
-  <button type="button" id="start-btn">▶&nbsp;&nbsp;Start task</button>
-
+  {% if language == 'sw' %}
+    <h2>Uko tayari? Tuangalie na tuanze!</h2>
+    <ul class="reminder-list">
+      <li><span class="ico">⏱</span> Sasa utaanza kipindi cha kwanza cha kazi kwa <strong>dakika {{ task_minutes }}</strong>.</li>
+      {% if condition == 'no_break' %}
+        <li><span class="ico">➡️</span> Baada ya dakika {{ task_minutes }} utaendelea <strong>kufanya kazi</strong> kwa dakika {{ break_minutes }} zaidi, kisha utafanya kipindi cha mwisho cha dakika {{ task_minutes }}.</li>
+      {% elif condition == 'forced_break' %}
+        <li><span class="ico">☕</span> Baada ya dakika {{ task_minutes }} utachukua <strong>mapumziko ya lazima ya dakika {{ break_minutes }}</strong> kabla ya kufanya kazi kwa kipindi kingine cha dakika {{ task_minutes }}.</li>
+      {% else %}
+        <li><span class="ico">☕</span> Baada ya dakika {{ task_minutes }} unaweza <strong>kuchagua</strong> kuchukua mapumziko ya dakika {{ break_minutes }} au kuendelea kufanya kazi.</li>
+      {% endif %}
+      <li><span class="ico">💰</span> <strong>Kadri unavyokamilisha kazi nyingi kwa usahihi</strong>, ndivyo malipo yako yatanavyoongezeka.</li>
+      <li><span class="ico">➡️</span> Usisahau kubonyeza <strong>Thibitisha Uteuzi</strong> ili uendelee kutoka gridi moja hadi nyingine.</li>
+      <li><span class="ico">🔇</span> Hakuna maoni yanayotolewa baada ya kila gridi — fanya vizuri iwezekanavyo, kisha endelea. Kumbuka kwamba kasi na usahihi zote mbili zina umuhimu.</li>
+    </ul>
+    <button type="button" id="start-btn">&#9654;&nbsp;&nbsp;Anza kazi</button>
+  {% else %}
+    <h2>Ready? Let's review and then begin!</h2>
+    <ul class="reminder-list">
+      <li><span class="ico">⏱</span> You will now start the first work session for <strong>{{ task_minutes }} minutes</strong>.</li>
+      {% if condition == 'no_break' %}
+        <li><span class="ico">➡️</span> After {{ task_minutes }} minutes you will <strong>continue working</strong> for {{ break_minutes }} more minute{% if break_minutes != 1 %}s{% endif %}, then do the final {{ task_minutes }}-minute session.</li>
+      {% elif condition == 'forced_break' %}
+        <li><span class="ico">☕</span> After {{ task_minutes }} minutes you will take a <strong>required {{ break_minutes }}-minute break</strong> before working for another {{ task_minutes }}-minute session.</li>
+      {% else %}
+        <li><span class="ico">☕</span> After {{ task_minutes }} minutes you can <strong>choose</strong> to take a {{ break_minutes }}-minute break or continue working.</li>
+      {% endif %}
+      <li><span class="ico">💰</span> The <strong>more tasks you finish correctly</strong>, the higher your payoff.</li>
+      <li><span class="ico">➡️</span> Don't forget to hit <strong>Confirm Selection</strong> to keep moving from grid to grid.</li>
+      <li><span class="ico">🔇</span> No feedback is given after each grid — do your best, and move on. Remember that both speed and accuracy matter.</li>
+    </ul>
+    <button type="button" id="start-btn">&#9654;&nbsp;&nbsp;Start task</button>
+  {% endif %}
 </div>
 
-<!-- Hidden oTree next button -->
 <div style="display:none;">{{ next_button }}</div>
-
 <script>
-(function () {
-  function advance() {
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('start-btn').addEventListener('click', function () {
     var btn = document.querySelector('button[type=submit], input[type=submit]');
-    if (btn) { btn.click(); return; }
-    var hidden = document.querySelector('[style*="display:none"] button, [style*="display:none"] input');
-    if (hidden) hidden.click();
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('start-btn').addEventListener('click', advance);
+    if (btn) btn.click();
   });
-}());
+});
 </script>
 {{ endblock }}
