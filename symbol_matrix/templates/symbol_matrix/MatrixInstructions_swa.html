@@ -1,4 +1,4 @@
-{{ block title }}Tutorial{{ endblock }}
+{{ block title }}Mafunzo{{ endblock }}
 
 {{ block styles }}
 <link rel="stylesheet" href="/static/katex/katex.min.css">
@@ -262,11 +262,11 @@
   <!-- Condition-specific study structure reminder -->
   <div id="structure-note" style="text-align:center; font-size:clamp(.75rem,2vmin,.85rem); color:#64748b; margin-bottom:2px; font-weight:500;">
     {% if condition == 'no_break' %}
-      Work structure: 90 minutes of work without a break
+      Muundo wa kazi: dakika 90 za kazi bila mapumziko
     {% elif condition == 'forced_break' %}
-      Work structure: {{ task_minutes }} min work &rarr; {{ break_minutes }} min break &rarr; {{ task_minutes }} min work
+      Muundo wa kazi: kazi dak. {{ task_minutes }} &rarr; mapumziko dak. {{ break_minutes }} &rarr; kazi dak. {{ task_minutes }}
     {% else %}
-      Work structure: {{ task_minutes }} min work &rarr; choice to take a {{ break_minutes }} min break or to keep working during that time &rarr; {{ task_minutes }} min work
+      Muundo wa kazi: kazi dak. {{ task_minutes }} &rarr; chagua mapumziko ya dak. {{ break_minutes }} au uendelee kufanya kazi &rarr; kazi dak. {{ task_minutes }}
     {% endif %}
   </div>
 
@@ -277,18 +277,18 @@
 
   <!-- Step 0 intro panel — shown alone, takes flex:1 -->
   <div id="intro-panel">
-    <p style="font-weight:700; font-size:clamp(.95rem,2.6vmin,1.15rem); color:#1e293b; margin:0 0 16px; text-align:center;">What you will do</p>
+    <p style="font-weight:700; font-size:clamp(.95rem,2.6vmin,1.15rem); color:#1e293b; margin:0 0 16px; text-align:center;">Utakachofanya</p>
     <ul style="font-size:clamp(.85rem,2.3vmin,1rem); color:#334155; line-height:1.7; padding-left:1.2rem; margin:0;">
-      <li>You will see a large grid.</li>
-      <li>Your job is to find a specific symbol in each grid, and tap on it as quickly and accurately as possible.</li>
-      <li>We will now walk through the steps and task together.</li>
-      <li>Your payment for the task will depend on speed and accuracy.</li>
+      <li>Utaona gridi kubwa.</li>
+      <li>Kazi yako ni kutafuta alama maalum katika kila gridi, na kugonga haraka iwezekanavyo kwa usahihi.</li>
+      <li>Tutapitia hatua na kazi pamoja sasa hivi.</li>
+      <li>Malipo yako kwa kazi hii yatategemea kasi na usahihi.</li>
     </ul>
   </div>
 
   <!-- Target row (matches real task layout) -->
   <div id="demo-target-row">
-    <span id="demo-prompt">Find this symbol in the grid:</span>
+    <span id="demo-prompt">Tafuta alama hii katika gridi:</span>
     <div id="demo-target"></div>
   </div>
 
@@ -299,10 +299,10 @@
   <div id="action-area">
     <!-- Both buttons occupy the same space; only one is shown at a time -->
     <button type="button" class="action-btn" id="next-btn" style="display:none;">
-      Next &rarr;
+      Ifuatayo &rarr;
     </button>
     <button type="button" class="action-btn" id="demo-confirm" disabled>
-      &#10003;&nbsp;&nbsp;Confirm Selection
+      &#10003;&nbsp;&nbsp;Thibitisha Uteuzi
     </button>
   </div>
 
@@ -316,11 +316,7 @@
 (function () {
 'use strict';
 
-/* ── Fixed tutorial grid ─────────────────────────────────────────
-   Target: \alpha   Correct positions (0-based): 6, 20, 37, 54
-   ─────────────────────────────────────────────────────────────── */
 var TARGET_LATEX = '\\alpha';
-// 6 targets spread across all 4 quadrants of the 10×10 grid
 var CORRECT      = [4, 17, 28, 53, 66, 82];
 var DISTRACTORS  = ['\\beta','\\gamma','\\delta','\\varepsilon','\\zeta','\\eta','\\theta'];
 
@@ -332,7 +328,6 @@ function buildGrid() {
 }
 var GRID = buildGrid();
 
-/* ── Helpers ─────────────────────────────────────────────────── */
 function rl(latex, dm) {
   try { return katex.renderToString(latex, { displayMode: !!dm, throwOnError: false }); }
   catch(e) { return latex; }
@@ -383,7 +378,6 @@ function flash(fn) {
   setTimeout(function() { wd.classList.remove('show'); fn(); }, 700);
 }
 
-/* Show next-btn or confirm-btn in the action area */
 function showNext() {
   document.getElementById('next-btn').style.display     = '';
   document.getElementById('demo-confirm').style.display = 'none';
@@ -400,7 +394,7 @@ function showConfirm(enabled) {
 /* ── Step 0: intro text, no grid ─────────────────────────────── */
 function step0() {
   setDots(1);
-  setBanner('📋', 'What you will do');
+  setBanner('📋', 'Utakachofanya');
   var panel = document.getElementById('intro-panel');
   panel.style.display = 'flex';
   document.getElementById('demo-target-row').style.display = 'none';
@@ -422,7 +416,7 @@ function step0() {
 function step1() {
   sizeGrid();
   setDots(2);
-  setBanner('👁', 'Highlighted in blue, just below, is the symbol you need to find in the grid. Click on NEXT to continue with the instructions.');
+  setBanner('👁', 'Alama unayohitaji kutafuta imeonyeshwa kwa rangi ya bluu hapa chini. Bonyeza IFUATAYO kuendelea na maelekezo.');
   document.getElementById('demo-grid').classList.add('dim');
   document.getElementById('demo-target').classList.add('pulse');
   showNext();
@@ -439,7 +433,7 @@ function step1() {
 function step2() {
   sizeGrid();
   setDots(3);
-  setBanner('👆', 'Look for this symbol in the grid. For simplicity, we have highlighted it in orange. Select it by tapping on the screen.');
+  setBanner('👆', 'Tafuta alama hii katika gridi. Kwa urahisi, tumeonyesha kwa rangi ya machungwa. Chagua kwa kugonga skrini.');
   document.getElementById('demo-grid').classList.remove('dim');
   showConfirm(false);
 
@@ -462,7 +456,7 @@ function step2() {
 function step3() {
   sizeGrid();
   setDots(4);
-  setBanner('👆', 'Great job! What if you selected on the wrong symbol by mistake? Tap on it again to remove it. Give it a try below.');
+  setBanner('👆', 'Vizuri sana! Je, umechagua alama mbaya kwa makosa? Gonga tena kuiondoa. Jaribu hapa chini.');
   showConfirm(false);
 
   var target = CORRECT[0];
@@ -476,11 +470,11 @@ function step3() {
   });
 }
 
-/* ── Step 4: find all 4 correct cells ───────────────────────── */
+/* ── Step 4: find all correct cells ─────────────────────────── */
 function step4() {
   sizeGrid();
   setDots(5);
-  setBanner('✋', 'Now find ALL matching symbols and select them in the grid below by tapping on them. To make it simple, they are highlighted in orange for this demonstration.');
+  setBanner('✋', 'Sasa tafuta alama ZOTE zinazolingana na uzichague katika gridi kwa kuzigonga. Kwa urahisi, zimeonyeshwa kwa rangi ya machungwa.');
   showConfirm(false);
 
   var fd = document.getElementById('found-dots');
@@ -525,7 +519,7 @@ function step4() {
 function step5() {
   sizeGrid();
   setDots(6);
-  setBanner('✅', 'When you are working on this task, the page will NOT change automatically. Once you believe you selected symbols, you will need to hit CONFIRM at the bottom. Tap on Confirm Selection now.');
+  setBanner('✅', 'Ukifanya kazi hii, ukurasa HAUTABADILIKA kiotomatiki. Ukishachagua alama, unahitaji kubonyeza THIBITISHA chini. Bonyeza Thibitisha Uteuzi sasa.');
   showConfirm(true);
 
   document.getElementById('demo-confirm').addEventListener('click', function onStep5Confirm() {
@@ -536,7 +530,6 @@ function step5() {
 
 /* ── Step 6: free-form demo — no hints, different target ─────── */
 var TARGET2_LATEX = '\\beta';
-// 5 targets spread across the 10×10 grid, no hints this time
 var CORRECT2      = [8, 31, 45, 63, 79];
 var DISTRACTORS2  = ['\\zeta','\\eta','\\theta','\\phi','\\psi'];
 
@@ -551,13 +544,11 @@ var selected2 = new Set();
 
 function step6() {
   setDots(7);
-  setBanner('🎯', 'Now try a full round by yourself: find and tap on all matching symbols. Then tap on Confirm Selection once you are done.');
+  setBanner('🎯', 'Sasa jaribu raundi nzima peke yako: tafuta na gonga alama zote zinazolingana. Kisha bonyeza Thibitisha Uteuzi unapokwisha.');
   selected2 = new Set();
 
-  // Swap target display
   document.getElementById('demo-target').innerHTML = rl(TARGET2_LATEX, true);
 
-  // Rebuild grid
   var container = document.getElementById('demo-grid');
   container.innerHTML = '';
   cells = [];

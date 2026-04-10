@@ -1,4 +1,4 @@
-{{ block title }}Welcome{{ endblock }}
+{{ block title }}Karibu{{ endblock }}
 
 {{ block styles }}
 <style>
@@ -134,7 +134,7 @@
     color: #94a3b8;
     flex-shrink: 0;
     padding: 0 4px;
-    margin-bottom: 18px; /* aligns with bar vertical center */
+    margin-bottom: 18px;
   }
 
   /* Footer button */
@@ -162,8 +162,8 @@
 <div id="welcome-card">
 
   <div class="w-header">
-    <h2>Welcome to your work task!</h2>
-    <p>Here is what to expect:</p>
+    <h2>Karibu katika kazi yako!</h2>
+    <p>Haya ndiyo utakayoyapata:</p>
   </div>
 
   <div class="w-body">
@@ -172,67 +172,67 @@
     <div class="steps-row">
       <div class="step-item">
         <div class="step-icon">📖</div>
-        <div class="step-label">Learn<br>the task</div>
+        <div class="step-label">Jifunze<br>kazi</div>
       </div>
       <div class="step-item">
         <div class="step-icon">🎮</div>
-        <div class="step-label">Try it<br>out</div>
+        <div class="step-label">Jaribu<br>kazi</div>
       </div>
       <div class="step-item">
         <div class="step-icon">💰</div>
-        <div class="step-label">Learn how<br>you get paid</div>
+        <div class="step-label">Jifunze<br>malipo</div>
       </div>
       <div class="step-item">
         <div class="step-icon">✅</div>
-        <div class="step-label">Do the<br>real task</div>
+        <div class="step-label">Fanya<br>kazi halisi</div>
       </div>
     </div>
 
     <!-- Structure -->
     <div class="structure-box">
-      <div class="structure-label">Your work schedule today</div>
+      <div class="structure-label">Ratiba yako ya kazi leo</div>
 
       {% if condition == 'no_break' %}
       <div class="timeline">
         <div class="tl-block" style="flex:9">
-          <div class="tl-bar work">90 min — Work</div>
-          <div class="tl-cap">Continuous work session without a break. Task will be split up in three consecutive sessions: 40 min, 10 min, 40 min.</div>
+          <div class="tl-bar work">Dakika 90 — Kazi</div>
+          <div class="tl-cap">Kipindi cha kazi kinachoendelea bila mapumziko. Kazi itagawanywa katika vipindi vitatu mfululizo: dakika 40, dakika 10, dakika 40.</div>
         </div>
       </div>
 
       {% elif condition == 'forced_break' %}
       <div class="timeline">
         <div class="tl-block" style="flex:4">
-          <div class="tl-bar work">{{ task_minutes }} min</div>
-          <div class="tl-cap">Work</div>
+          <div class="tl-bar work">Dak. {{ task_minutes }}</div>
+          <div class="tl-cap">Kazi</div>
         </div>
         <div class="tl-arrow">›</div>
         <div class="tl-block" style="flex:1">
-          <div class="tl-bar brk">{{ break_minutes }} min</div>
-          <div class="tl-cap">Break</div>
+          <div class="tl-bar brk">Dak. {{ break_minutes }}</div>
+          <div class="tl-cap">Mapumziko</div>
         </div>
         <div class="tl-arrow">›</div>
         <div class="tl-block" style="flex:4">
-          <div class="tl-bar work">{{ task_minutes }} min</div>
-          <div class="tl-cap">Work</div>
+          <div class="tl-bar work">Dak. {{ task_minutes }}</div>
+          <div class="tl-cap">Kazi</div>
         </div>
       </div>
 
       {% else %}
       <div class="timeline">
         <div class="tl-block" style="flex:4">
-          <div class="tl-bar work">{{ task_minutes }} min</div>
-          <div class="tl-cap">Work</div>
+          <div class="tl-bar work">Dak. {{ task_minutes }}</div>
+          <div class="tl-cap">Kazi</div>
         </div>
         <div class="tl-arrow">›</div>
         <div class="tl-block" style="flex:1">
-          <div class="tl-bar choice">{{ break_minutes }} min</div>
-          <div class="tl-cap">Your choice: break or work</div>
+          <div class="tl-bar choice">Dak. {{ break_minutes }}</div>
+          <div class="tl-cap">Chaguo lako: mapumziko au kazi</div>
         </div>
         <div class="tl-arrow">›</div>
         <div class="tl-block" style="flex:4">
-          <div class="tl-bar work">{{ task_minutes }} min</div>
-          <div class="tl-cap">Work</div>
+          <div class="tl-bar work">Dak. {{ task_minutes }}</div>
+          <div class="tl-cap">Kazi</div>
         </div>
       </div>
       {% endif %}

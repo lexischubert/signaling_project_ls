@@ -1,8 +1,7 @@
-{{ block title }}Ready to begin{{ endblock }}
+{{ block title }}Uko Tayari Kuanza{{ endblock }}
 
 {{ block styles }}
 <style>
-  /* Hide oTree's own timeout bar */
   #otree-timeout { display: none !important; }
 
   body { background: #f8f9fa; }
@@ -78,47 +77,46 @@
 {{ block content }}
 <div id="start-card">
 
-  <h2>Ready? Let's review and then begin!</h2>
+  <h2>Uko tayari? Tuangalie na tuanze!</h2>
 
   <ul class="reminder-list">
     <li>
       <span class="ico">⏱</span>
-      You will now start the first work session for <strong>{{ task_minutes }} minutes</strong>.
+      Sasa utaanza kipindi cha kwanza cha kazi kwa <strong>dakika {{ task_minutes }}</strong>.
     </li>
     {% if condition == 'no_break' %}
     <li>
       <span class="ico">➡️</span>
-      After {{ task_minutes }} minutes you will <strong>continue working</strong>
-      for {{ break_minutes }} more minute{% if break_minutes != 1 %}s{% endif %}, then do the final {{ task_minutes }}-minute session.
+      Baada ya dakika {{ task_minutes }} utaendelea <strong>kufanya kazi</strong>
+      kwa dakika {{ break_minutes }} zaidi{% if break_minutes != 1 %}{% endif %}, kisha utafanya kipindi cha mwisho cha dakika {{ task_minutes }}.
     </li>
     {% elif condition == 'forced_break' %}
     <li>
       <span class="ico">☕</span>
-      After {{ task_minutes }} minutes you will take a
-      <strong>required {{ break_minutes }}-minute break</strong> before working for another {{ task_minutes }}-minute session.
+      Baada ya dakika {{ task_minutes }} utachukua <strong>mapumziko ya lazima ya dakika {{ break_minutes }}</strong> kabla ya kufanya kazi kwa kipindi kingine cha dakika {{ task_minutes }}.
     </li>
     {% else %}
     <li>
       <span class="ico">☕</span>
-      After {{ task_minutes }} minutes you can <strong>choose</strong> to take a
-      {{ break_minutes }}-minute break or continue working before working for another {{ task_minutes }}-minute session.
+      Baada ya dakika {{ task_minutes }} unaweza <strong>kuchagua</strong> kuchukua mapumziko ya
+      dakika {{ break_minutes }} au kuendelea kufanya kazi kabla ya kipindi kingine cha dakika {{ task_minutes }}.
     </li>
     {% endif %}
     <li>
       <span class="ico">💰</span>
-      The <strong>more tasks you finish correctly</strong>, the higher your payoff.
+      <strong>Kadri unavyokamilisha kazi nyingi kwa usahihi</strong>, ndivyo malipo yako yatanavyoongezeka.
     </li>
     <li>
       <span class="ico">➡️</span>
-      Don't forget to hit <strong>Confirm Selection</strong> to keep moving from grid to grid.
+      Usisahau kubonyeza <strong>Thibitisha Uteuzi</strong> ili uendelee kutoka gridi moja hadi nyingine.
     </li>
     <li>
       <span class="ico">🔇</span>
-      No feedback is given after each grid — do your best, and move on. Remember that both speed and accuracy matter.
+      Hakuna maoni yanayotolewa baada ya kila gridi — fanya vizuri iwezekanavyo, kisha endelea. Kumbuka kwamba kasi na usahihi zote mbili zina umuhimu.
     </li>
   </ul>
 
-  <button type="button" id="start-btn">▶&nbsp;&nbsp;Start task</button>
+  <button type="button" id="start-btn">&#9654;&nbsp;&nbsp;Anza kazi</button>
 
 </div>
 

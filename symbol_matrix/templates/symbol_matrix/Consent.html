@@ -93,21 +93,23 @@
     </div>
 
     <div class="c-body">
+      
 
       <p class="section-title">Purpose of the study</p>
       <p>
-        You are invited to take part in a research study on decision-making and cognitive tasks.
-        The study is conducted by researchers at a university and is intended to understand how
-        people perform symbol-matching tasks under timed conditions.
+        We invite you to take part in a research study on decision-making and cognitive tasks.
+        The study is conducted by researchers from the Massachusetts Institute of Technology, 
+        the University of California Berkeley, the University of Zurich. 
+        The study involves responding quickly and correctly to images on your screen. 
+        <br>
       </p>
 
       <p class="section-title">What you will do</p>
       <p>
         {% if condition == 'no_break' %}
-          You will complete a symbol-matching task in two work periods:
-          a first session of <strong>{{ seg1_total_minutes }} minutes</strong>
-          followed by a second session of <strong>{{ task_minutes }} minutes</strong>,
-          with no break in between.
+          You will complete a symbol-matching task:
+          the session lasts 90 minutes</strong>,
+          with no break.
         {% elif condition == 'forced_break' %}
           You will complete a symbol-matching task in two sessions of
           <strong>{{ task_minutes }} minutes</strong> each, separated by a
@@ -117,57 +119,42 @@
           <strong>{{ task_minutes }} minutes</strong> each, with an optional
           {{ break_minutes }}-minute break in between.
         {% endif %}
-        On each trial you will see a target symbol and must select all matching symbols
-        from a grid of 64.
+        During a given round, you will see a target symbol and must select all matching symbols
+        from a grid of 100.
       </p>
 
       <p class="section-title">Payment</p>
       <p>
-        You will receive a <strong>show-up fee of $3.00</strong> for completing the study.
-        In addition, you earn experiment tokens for every correct task:
+        You will receive a <strong>participation payment of Ksh 350</strong> for completing the full study. 
+        We also cover your transport for Ksh200. 
+        In addition, you could earn up additional bonus payments based on task accuracy and speed. 
+        In total, you can expect to earn around Ksh 600 - 700.
+        In addition, you can earn Shillings for every correct task:
       </p>
-      <ul>
-        <li>
-          {% if condition == 'no_break' %}
-            <strong>Session 1 ({{ seg1_total_minutes }} minutes):</strong>
-          {% elif condition == 'choice' %}
-            <strong>Session 1 (and the break period if you work through it):</strong>
-          {% else %}
-            <strong>Session 1:</strong>
-          {% endif %}
-          1 token per correct task &mdash; each token is worth <strong>$0.004</strong>.
-        </li>
-        <li>
-          {% if condition == 'no_break' %}
-            <strong>Session 2 ({{ task_minutes }} minutes):</strong>
-          {% else %}
-            <strong>Session 2:</strong>
-          {% endif %}
-          2 tokens per correct task &mdash; each token is worth $0.004,
-          so <strong>$0.008 per correct task</strong>.
-        </li>
-      </ul>
-      <p>Your total earnings will be paid to you at the end of the session.</p>
+      <p>Your total earnings will be paid via MPesa. 
+        We will calculate earnings immediately, but it may take a day or two for the payments to arrive because of administrative reasons.</p>
 
       <p class="section-title">Risks and benefits</p>
       <p>
-        There are no known risks beyond those of everyday computer use. There is no direct
+        There are no known risks beyond those of everyday computer use. 
+        There is no direct
         personal benefit beyond the payment described above, but your responses will
         contribute to scientific research.
       </p>
 
       <p class="section-title">Confidentiality</p>
       <p>
-        All data are stored securely and will only be reported in anonymised, aggregated form.
+        Identifying information will be kept strictly confidential and will not be shared outside the research team. 
+        All data are stored securely and will only be reported in a anonymized, aggregated form.
         Your name will never be linked to your responses in any publication. Your participant
         ID (not your name) will be used to identify your data.
       </p>
 
       <p class="section-title">Voluntary participation</p>
       <p>
-        Participation is entirely voluntary. You may stop at any time without penalty,
-        though you will only receive the full payment if you complete both sessions.
-        If you have questions, please ask the research assistant before proceeding.
+        Participation is entirely voluntary, but you must be over the age of 18. You may stop at any time without penalty,
+        though you will only receive the full payment if you complete the study.
+        If you have questions, please ask the research team before proceeding.
       </p>
 
       <div class="agree-box">

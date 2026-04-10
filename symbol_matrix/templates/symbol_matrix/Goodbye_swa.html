@@ -1,4 +1,4 @@
-{{ block title }}Thank You{{ endblock }}
+{{ block title }}Asante{{ endblock }}
 
 {{ block content }}
 <div class="container mt-4">
@@ -6,56 +6,56 @@
     <div class="col-md-7">
       <div class="card shadow-sm text-center">
         <div class="card-header bg-primary text-white py-3">
-          <h4 class="mb-0">Thank you for your participation!</h4>
+          <h4 class="mb-0">Asante kwa ushiriki wako!</h4>
         </div>
         <div class="card-body py-4 px-4">
 
           {% if total_attempted %}
-          <p class="lead mb-4">You have completed the task. We know it is challenging and we appreciate your effort. Here is a summary of your earnings.</p>
+          <p class="lead mb-4">Umekamilisha kazi. Tunajua ni ngumu na tunathamini juhudi zako. Hapa kuna muhtasari wa mapato yako.</p>
 
           <!-- Payoff summary -->
           <table class="table table-bordered table-sm text-start mx-auto" style="max-width:440px;">
             <thead class="table-light">
-              <tr><th colspan="2">Your earnings</th></tr>
+              <tr><th colspan="2">Mapato yako</th></tr>
             </thead>
             <tbody>
               <tr>
-                <td>Participation fee</td>
+                <td>Ada ya ushiriki</td>
                 <td class="text-end">Ksh {{ participation_fee }}</td>
               </tr>
               <tr>
-                <td>Transportation fee</td>
+                <td>Ada ya usafiri</td>
                 <td class="text-end">Ksh {{ transport_fee }}</td>
               </tr>
 
               {% if break_choice == False %}
               <!-- no_break or choice-kept-working: 3 sessions -->
               <tr>
-                <td>Session 1 &nbsp;<small class="text-muted">({{ seg1_correct }} correct × Ksh 1)</small></td>
+                <td>Kipindi cha 1 &nbsp;<small class="text-muted">({{ seg1_correct }} sahihi × Ksh 1)</small></td>
                 <td class="text-end">Ksh {{ seg1_bonus }}</td>
               </tr>
               <tr>
-                <td>Continue working &nbsp;<small class="text-muted">({{ bridge_correct }} correct × Ksh 1)</small></td>
+                <td>Kuendelea kufanya kazi &nbsp;<small class="text-muted">({{ bridge_correct }} sahihi × Ksh 1)</small></td>
                 <td class="text-end">Ksh {{ bridge_bonus }}</td>
               </tr>
               <tr>
-                <td>Final session &nbsp;<small class="text-muted">({{ seg2_correct }} correct × Ksh 1)</small></td>
+                <td>Kipindi cha mwisho &nbsp;<small class="text-muted">({{ seg2_correct }} sahihi × Ksh 1)</small></td>
                 <td class="text-end">Ksh {{ seg2_bonus }}</td>
               </tr>
               {% else %}
               <!-- forced_break or choice-took-break: 2 sessions -->
               <tr>
-                <td>Session 1 &nbsp;<small class="text-muted">({{ seg1_correct }} correct × Ksh 1)</small></td>
+                <td>Kipindi cha 1 &nbsp;<small class="text-muted">({{ seg1_correct }} sahihi × Ksh 1)</small></td>
                 <td class="text-end">Ksh {{ seg1_bonus }}</td>
               </tr>
               <tr>
-                <td>Session 2 &nbsp;<small class="text-muted">({{ seg2_correct }} correct × Ksh 1)</small></td>
+                <td>Kipindi cha 2 &nbsp;<small class="text-muted">({{ seg2_correct }} sahihi × Ksh 1)</small></td>
                 <td class="text-end">Ksh {{ seg2_bonus }}</td>
               </tr>
               {% endif %}
 
               <tr class="table-success fw-bold">
-                <td>Total earnings</td>
+                <td>Mapato ya jumla</td>
                 <td class="text-end">Ksh {{ total_payoff }}</td>
               </tr>
             </tbody>
@@ -63,15 +63,15 @@
 
           <!-- Task summary -->
           <p class="text-muted small mt-3 mb-0">
-            Grids attempted: <strong>{{ total_attempted }}</strong> &nbsp;|&nbsp;
-            Correct: <strong>{{ total_correct }}</strong>
+            Gridi zilizojaribiwa: <strong>{{ total_attempted }}</strong> &nbsp;|&nbsp;
+            Sahihi: <strong>{{ total_correct }}</strong>
           </p>
           {% else %}
-          <p class="lead">You have successfully completed the study.</p>
+          <p class="lead">Umekamilisha utafiti kwa mafanikio.</p>
           {% endif %}
 
-          <p class="text-muted mt-3">Your responses have been recorded. Your payment will arrive within the next 2 days via M-PESA.</p>
-          <p class="text-muted">If you are selected to return for future work, you will be contacted by phone. You may now close this browser window.</p>
+          <p class="text-muted mt-3">Majibu yako yamerekodiwa. Malipo yako yatafika ndani ya siku 2 zijazo kupitia M-PESA.</p>
+          <p class="text-muted">Ikiwa utachaguliwa kurudi kwa kazi ya baadaye, utawasiliana nawe kwa simu. Sasa unaweza kufunga dirisha hili la kivinjari.</p>
         </div>
       </div>
     </div>

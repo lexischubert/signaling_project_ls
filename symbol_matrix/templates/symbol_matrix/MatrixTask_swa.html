@@ -1,4 +1,4 @@
-{{ block title }}Symbol Task{{ endblock }}
+{{ block title }}Kazi ya Alama{{ endblock }}
 
 {{ block styles }}
 <link rel="stylesheet" href="/static/katex/katex.min.css">
@@ -110,7 +110,6 @@
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
     gap: 3px;
-    /* width/height/font-size set by sizeGrid() */
   }
   .sym-cell {
     display: flex;
@@ -163,17 +162,17 @@
   </div>
 
   <div id="target-row">
-    <span id="task-prompt">Find all matching symbols in the grid:</span>
+    <span id="task-prompt">Tafuta alama zote zinazolingana katika gridi:</span>
     <div id="target-display"></div>
   </div>
 
   <div id="grid-wrapper">
-    <div id="loading-msg">Loading&hellip;</div>
+    <div id="loading-msg">Inapakia&hellip;</div>
     <div id="sym-grid" style="display:none;"></div>
   </div>
 
   <button type="button" id="confirm-btn" disabled>
-    ✓&nbsp;&nbsp;Confirm Selection
+    ✓&nbsp;&nbsp;Thibitisha Uteuzi
   </button>
 
 </div>
@@ -210,12 +209,10 @@ function rl(latex, dm) {
 function sizeGrid() {
   var wrapper = document.getElementById('grid-wrapper');
   var grid    = document.getElementById('sym-grid');
-  // Square grid = min of available width and height
   var sz = Math.min(wrapper.clientWidth, wrapper.clientHeight) - 2;
   if (sz < 50) return;
   grid.style.width  = sz + 'px';
   grid.style.height = sz + 'px';
-  // Font size ≈ 30% of cell size (cell ≈ (sz - 9 gaps) / 10)
   var cell = (sz - 27) / 10;
   grid.style.fontSize = Math.max(9, Math.round(cell * 0.30)) + 'px';
 }
@@ -266,7 +263,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     _task = null;
 
-    // Show loading state while waiting for next task
     document.getElementById('sym-grid').style.display = 'none';
     document.getElementById('loading-msg').style.display = '';
   });

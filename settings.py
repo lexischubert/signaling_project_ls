@@ -10,6 +10,7 @@ SESSION_CONFIGS = [
         task_minutes=3,
         break_minutes=1,
         task_type='matrix',
+        language='en',
     ),
     dict(
         name='matrix_full',
@@ -19,6 +20,27 @@ SESSION_CONFIGS = [
         task_minutes=40,
         break_minutes=10,
         task_type='matrix',
+        language='en',
+    ),
+    dict(
+        name='matrix_demo_sw',
+        display_name='Symbol Matrix Task — Kiswahili (Demo — 3+1+3 min)',
+        app_sequence=['symbol_matrix'],
+        num_demo_participants=1,
+        task_minutes=3,
+        break_minutes=1,
+        task_type='matrix',
+        language='sw',
+    ),
+    dict(
+        name='matrix_full_sw',
+        display_name='Symbol Matrix Task — Kiswahili (Full — 40+10+40 min)',
+        app_sequence=['symbol_matrix'],
+        num_demo_participants=1,
+        task_minutes=40,
+        break_minutes=10,
+        task_type='matrix',
+        language='sw',
     ),
     # ── Legacy demos (kept for reference) ─────────────────────────────────
     dict(

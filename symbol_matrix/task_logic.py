@@ -14,11 +14,11 @@ _BREAK_MINUTES_DEFAULT = 10
 
 # Legacy symbol-grid constants
 NUM_SYMBOL_TYPES    = 8
-SYMBOL_GRID_SIZE    = 64
+SYMBOL_GRID_SIZE    = 100
 NUM_TARGETS_IN_GRID = 8
 
 # Matrix task constants
-MATRIX_GRID_SIZE   = 64   # 8 × 8
+MATRIX_GRID_SIZE   = 100   # 10 × 10
 MATRIX_MIN_TARGETS = 1
 MATRIX_MAX_TARGETS = 10
 
@@ -32,12 +32,13 @@ def _break_duration(player):
 
 
 def _get_condition(player):
-    """Derive experimental condition from field_id.
+    """Derive experimental condition from field_id (first digit).
 
-    Field IDs starting with '1' → no_break   (40 + 10 work + 40, no choice)
-    Field IDs starting with '2' → forced_break (40 + 10 break + 40, no choice)
-    Field IDs starting with '3' → choice       (40 + choose break/work + 40)
-    Any other value              → choice       (safe default)
+    4-digit field ID format: [condition][treat][participant##]
+    First digit: '1' → no_break    (40 + 10 work + 40, no choice)
+                 '2' → forced_break (40 + 10 break + 40, no choice)
+                 '3' → choice       (40 + choose break/work + 40)
+    Any other value  → choice       (safe default)
     """
     fid = (player.field_maybe_none('field_id') or '').strip()
     if fid.startswith('1'):
@@ -45,6 +46,20 @@ def _get_condition(player):
     if fid.startswith('2'):
         return 'forced_break'
     return 'choice'
+
+
+def _get_treat(player):
+    """Derive signaling treatment from field_id (second digit).
+
+    4-digit field ID format: [condition][treat][participant##]
+    Second digit: '1' → treat    (hiring manager framing shown)
+                  '2' → no_treat (neutral framing shown)
+    Any other value   → no_treat (safe default)
+    """
+    fid = (player.field_maybe_none('field_id') or '').strip()
+    if len(fid) >= 2 and fid[1] == '1':
+        return 'treat'
+    return 'no_treat'
 
 
 def _generate_matrix_task():

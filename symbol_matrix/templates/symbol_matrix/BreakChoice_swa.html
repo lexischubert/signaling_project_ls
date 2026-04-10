@@ -1,4 +1,4 @@
-{{ block title }}End of Session 1{{ endblock }}
+{{ block title }}Mwisho wa Kipindi cha 1{{ endblock }}
 
 {{ block content }}
 
@@ -62,37 +62,37 @@
   <div class="row justify-content-center">
     <div class="col-md-8">
 
-      <h4 class="text-center mb-1">Session 1 complete!</h4>
+      <h4 class="text-center mb-1">Kipindi cha 1 kimekamilika!</h4>
       <p class="text-center text-muted mb-4" style="font-size:.95rem;">
-        You have completed the first part of your work session. Please choose what you would like to happen next. <br><br>
-        Please note that which option you choose will be shared with the hiring manager in charge of deciding who is invited back for another task.
+        Umekamilisha sehemu ya kwanza ya kazi yako. Tafadhali chagua ungependa nini kifuatacho. <br><br>
+        Tafadhali kumbuka kwamba chaguo unalofanya litashirikiwa na msimamizi wa kuajiri anayehusika na kuamua ni nani atakayealikwa kurudi kwa kazi nyingine.
       </p>
 
       <div class="row g-3">
         <div class="col-6 d-flex">
           <div class="choice-card" id="card-break" onclick="choose(true)">
             <div class="choice-icon">😴</div>
-            <div class="choice-title">Take a 10-minute break</div>
+            <div class="choice-title">Pumzika kwa dakika 10</div>
             <div class="choice-desc">
-              The screen will lock for <strong>{{ break_minutes }} min</strong> and you <strong>won't</strong>
-              be able to work and earn money during this time.
-              You can use this time to get up and rest and relax in the break room.
+              Skrini itafungwa kwa <strong>dakika {{ break_minutes }}</strong> na hutaweza
+              kufanya kazi na kupata pesa wakati huo.
+              Unaweza kutumia muda huu kupumzika na kustarehe katika chumba cha mapumziko.
             </div>
           </div>
         </div>
         <div class="col-6 d-flex">
           <div class="choice-card" id="card-work" onclick="choose(false)">
             <div class="choice-icon">💪</div>
-            <div class="choice-title">Work an extra 10 minutes</div>
+            <div class="choice-title">Fanya kazi dakika 10 zaidi</div>
             <div class="choice-desc">
-              You will keep working and earning money during the <strong>{{ break_minutes }} min</strong>. You will not have a break during the work period.
+              Utaendelea kufanya kazi na kupata pesa kwa <strong>dakika {{ break_minutes }}</strong>. Hautakuwa na mapumziko wakati wa kazi.
             </div>
           </div>
         </div>
       </div>
 
       <button type="submit" id="confirm-btn" style="display:none;">
-        Confirm my choice &rarr;
+        Thibitisha chaguo langu &rarr;
       </button>
 
     </div>

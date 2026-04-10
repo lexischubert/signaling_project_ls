@@ -1,0 +1,170 @@
+{{ block title }}Idhini ya Ufahamu{{ endblock }}
+
+{{ block styles }}
+<style>
+  body { background: #f8f9fa; }
+
+  .consent-wrap {
+    max-width: 660px;
+    margin: 2rem auto;
+  }
+
+  .consent-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 14px rgba(0,0,0,.10);
+    overflow: hidden;
+  }
+
+  .consent-card .c-header {
+    background: #1e40af;
+    color: #fff;
+    padding: 1.3rem 1.8rem;
+    text-align: center;
+  }
+  .consent-card .c-header h4 { margin: 0; font-size: 1.25rem; font-weight: 700; }
+
+  .consent-card .c-body { padding: 1.8rem 2rem; }
+
+  .section-title {
+    font-weight: 700;
+    color: #1e293b;
+    margin: 1.2rem 0 .4rem;
+    font-size: .95rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .section-title:first-child { margin-top: 0; }
+
+  .c-body p, .c-body li { color: #334155; font-size: .93rem; line-height: 1.6; }
+  .c-body ul { padding-left: 1.2rem; margin-bottom: .8rem; }
+
+  .agree-box {
+    margin-top: 1.6rem;
+    padding: 1.2rem 1.4rem;
+    background: #eff6ff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .agree-box input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+    accent-color: #1e40af;
+  }
+  .agree-box label {
+    font-size: .93rem;
+    color: #1e293b;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1.5;
+  }
+
+  .c-footer {
+    padding: 1rem 2rem 1.6rem;
+    text-align: center;
+  }
+  .c-footer button,
+  .c-footer input[type=submit] {
+    padding: 11px 40px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    background: #1e40af;
+    color: #fff;
+    cursor: pointer;
+  }
+  .c-footer button:active { opacity: .85; }
+</style>
+{{ endblock }}
+
+{{ block content }}
+<div class="consent-wrap">
+  <div class="consent-card">
+
+    <div class="c-header">
+      <h4>Idhini ya Ufahamu</h4>
+    </div>
+
+    <div class="c-body">
+
+      <p class="section-title">Madhumuni ya utafiti</p>
+      <p>
+        Tunakukaribisha kushiriki katika utafiti wa maamuzi na kazi za akili.
+        Utafiti huu unafanywa na watafiti kutoka Massachusetts Institute of Technology,
+        Chuo Kikuu cha California Berkeley, na Chuo Kikuu cha Zurich.
+        Utafiti huu unahusisha kujibu haraka na kwa usahihi picha zinazoonekana kwenye skrini yako.
+        <br>
+      </p>
+
+      <p class="section-title">Utafanya nini</p>
+      <p>
+        {% if condition == 'no_break' %}
+          Utakamilisha kazi ya kulinganisha alama:
+          kipindi kina muda wa dakika 90</strong>,
+          bila mapumziko.
+        {% elif condition == 'forced_break' %}
+          Utakamilisha kazi ya kulinganisha alama katika vipindi viwili vya
+          <strong>dakika {{ task_minutes }}</strong> kila kimoja, vikigawanywa na
+          <strong>mapumziko ya lazima ya dakika {{ break_minutes }}</strong>.
+        {% else %}
+          Utakamilisha kazi ya kulinganisha alama katika vipindi viwili vya
+          <strong>dakika {{ task_minutes }}</strong> kila kimoja, na mapumziko ya hiari ya
+          dakika {{ break_minutes }} kati ya vipindi.
+        {% endif %}
+        Katika raundi moja, utaona alama lengwa na lazima uchague alama zote zinazofanana
+        kutoka kwenye gridi ya alama 100.
+      </p>
+
+      <p class="section-title">Malipo</p>
+      <p>
+        Utapokea <strong>malipo ya ushiriki ya Ksh 350</strong> kwa kukamilisha utafiti wote.
+        Pia tunafunika nauli yako ya Ksh 200.
+        Zaidi ya hayo, unaweza kupata malipo ya ziada ya bonasi kulingana na usahihi na kasi yako ya kazi.
+        Kwa jumla, unaweza kutarajia kupata kati ya Ksh 600 - 700.
+        Unaweza kupata Shilingi kwa kila kazi sahihi.
+      </p>
+      <p>Mapato yako yote yatalipwa kupitia M-PESA.
+        Tutahesabu mapato mara moja, lakini inaweza kuchukua siku moja au mbili kupokea malipo kwa sababu za utawala.</p>
+
+      <p class="section-title">Hatari na manufaa</p>
+      <p>
+        Hakuna hatari zinazojulikana zaidi ya hatari za kawaida za matumizi ya kompyuta.
+        Hakuna faida ya moja kwa moja ya kibinafsi zaidi ya malipo yaliyoelezwa hapo juu, lakini majibu yako
+        yatachangia utafiti wa kisayansi.
+      </p>
+
+      <p class="section-title">Usiri</p>
+      <p>
+        Taarifa zinazotambulisha zitahifadhiwa kwa siri na hazitashirikiwa nje ya timu ya utafiti.
+        Data zote huhifadhiwa kwa usalama na zitaripotiwa tu kwa njia isiyotambulisha watu binafsi, kwa ujumla.
+        Jina lako halitahusishwa na majibu yako katika chapisho lolote. Nambari yako ya mshiriki
+        (si jina lako) itatumika kutambua data yako.
+      </p>
+
+      <p class="section-title">Ushiriki wa hiari</p>
+      <p>
+        Ushiriki ni wa hiari kabisa, lakini lazima uwe na umri wa zaidi ya miaka 18. Unaweza kuacha wakati wowote bila adhabu,
+        ingawa utapokea malipo kamili tu ukikamilisha utafiti.
+        Ikiwa una maswali, tafadhali uliza timu ya utafiti kabla ya kuendelea.
+      </p>
+
+      <div class="agree-box">
+        {{ formfields }}
+      </div>
+
+    </div>
+
+    <div class="c-footer">
+      {{ next_button }}
+    </div>
+
+  </div>
+</div>
+{{ endblock }}

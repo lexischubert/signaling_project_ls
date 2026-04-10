@@ -1,4 +1,4 @@
-{{ block title }}Practice Round{{ endblock }}
+{{ block title }}Raundi ya Mazoezi{{ endblock }}
 
 {{ block styles }}
 <link rel="stylesheet" href="/static/katex/katex.min.css">
@@ -115,7 +115,6 @@
     grid-template-rows: repeat(10, 1fr);
     gap: 3px;
     user-select: none;
-    /* width/height/font-size set by sizeGrid() */
   }
   .dcell {
     display: flex;
@@ -167,22 +166,22 @@
 
   <div id="banner">
     <span id="b-icon">🧪</span>
-    <span id="b-text">Practice round</span>
+    <span id="b-text">Raundi ya mazoezi</span>
   </div>
 
   <div id="inner-card">
-    <div id="loading-msg">Loading&hellip;</div>
+    <div id="loading-msg">Inapakia&hellip;</div>
 
     <div id="task-container">
       <div id="target-row">
-        <span class="task-prompt">Find all matching symbols:</span>
+        <span class="task-prompt">Tafuta alama zote zinazolingana:</span>
         <div id="demo-target"></div>
       </div>
       <div id="grid-wrapper">
         <div id="demo-grid"></div>
       </div>
       <button type="button" id="confirm-btn">
-        &#10003;&nbsp;&nbsp;Confirm Selection
+        &#10003;&nbsp;&nbsp;Thibitisha Uteuzi
       </button>
     </div>
   </div>
@@ -193,7 +192,6 @@
 
 <script src="/static/katex/katex.min.js"></script>
 <script>
-// liveRecv must be global for oTree
 var _trial    = 0;
 var _selected = new Set();
 var _startMs  = null;
@@ -215,7 +213,6 @@ function sizeGrid() {
 }
 
 function setBanner(state, icon, text) {
-  // state: 'neutral' | 'well-done' | 'wrong-ans'
   var banner = document.getElementById('banner');
   banner.classList.remove('well-done', 'wrong-ans');
   if (state !== 'neutral') banner.classList.add(state);
@@ -257,11 +254,11 @@ function showTask(task, feedbackState) {
   document.getElementById('confirm-btn').disabled = false;
 
   if (feedbackState === 'correct') {
-    setBanner('well-done', '✅', 'Well done! Try once more before we begin.');
+    setBanner('well-done', '✅', 'Vizuri sana! Jaribu mara moja zaidi kabla hatujaanza.');
   } else if (feedbackState === 'wrong') {
-    setBanner('wrong-ans', '❌', 'Not quite — but keep going, the real task works the same way.');
+    setBanner('wrong-ans', '❌', 'Sijafanikiwa — lakini endelea, kazi halisi inafanya kazi vivyo hivyo.');
   } else {
-    setBanner('neutral', '🧪', 'Practice round');
+    setBanner('neutral', '🧪', 'Raundi ya mazoezi');
   }
 
   requestAnimationFrame(sizeGrid);
@@ -276,11 +273,10 @@ function liveRecv(data) {
     showTask(data.task, feedback);
   }
   if (data.type === 'practice_complete') {
-    // Brief banner before auto-advancing
     if (data.is_correct) {
-      setBanner('well-done', '✅', 'Well done! Moving on…');
+      setBanner('well-done', '✅', 'Vizuri sana! Tunaendelea…');
     } else {
-      setBanner('wrong-ans', '❌', 'Not quite — moving on to the real task.');
+      setBanner('wrong-ans', '❌', 'Sijafanikiwa — tunaendelea kwenye kazi halisi.');
     }
     setTimeout(function() {
       var real = document.querySelector('#real-next button, #real-next input[type=submit]');
@@ -297,11 +293,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var btn = document.getElementById('confirm-btn');
     btn.disabled = true;
 
-    // Lock grid cells during transition
     document.querySelectorAll('.dcell').forEach(function(c) { c.classList.add('locked'); });
     document.getElementById('task-container').style.display = 'none';
     document.getElementById('loading-msg').style.display    = '';
-    setBanner('neutral', '🧪', 'Practice round');
+    setBanner('neutral', '🧪', 'Raundi ya mazoezi');
 
     liveSend({
       type:          'submit_practice',

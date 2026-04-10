@@ -18,7 +18,7 @@ from .data_loaders import (
 from .task_logic import (
     MATRIX_GRID_SIZE, MATRIX_MIN_TARGETS, MATRIX_MAX_TARGETS,
     NUM_SYMBOL_TYPES, SYMBOL_GRID_SIZE, NUM_TARGETS_IN_GRID,
-    _task_duration, _break_duration, _get_condition,
+    _task_duration, _break_duration, _get_condition, _get_treat,
     _generate_matrix_task, _generate_symbol_grid, _point_in_box,
 )
 
@@ -127,14 +127,24 @@ class Player(BasePlayer):
     # $3 show-up fee + $0.01 per credit
     final_payoff_dollars = models.FloatField(initial=0.0)
 
+    # ----- Language (derived from session config) -----
+    # 'en' = English, 'sw' = Swahili
+    language = models.StringField(initial='en')
+
     # ----- Field ID (entered by participant at check-in) -----
+    # 4-digit code: digit 1 = break condition (1/2/3), digit 2 = treatment (1/2), digits 3-4 = participant number
     field_id = models.StringField(label='Field ID')
 
-    # ----- Condition (derived from field_id, stored for export) -----
+    # ----- Condition (derived from field_id first digit, stored for export) -----
     # 'no_break'     — forced continuous work (seg1 + bridge + seg2)
     # 'forced_break' — forced break between seg1 and seg2
     # 'choice'       — participant chooses whether to take a break
     condition = models.StringField(initial='')
+
+    # ----- Treatment (derived from field_id second digit, stored for export) -----
+    # 'treat'    — hiring manager signaling framing
+    # 'no_treat' — neutral framing
+    treat = models.StringField(initial='')
 
     # ----- Consent -----
     consented = models.BooleanField(
@@ -146,25 +156,65 @@ class Player(BasePlayer):
     # ----- Demographics -----
     demo_age = models.IntegerField(
         label='What is your age (in years)?',
-        choices=list(range(15, 86)),
+        choices=list(range(18, 51)),
     )
     demo_gender = models.StringField(
         label='What is your gender?',
         choices=['Male', 'Female', 'Non-binary / gender diverse', 'Prefer not to say'],
     )
-    demo_occupation = models.LongStringField(
-        label='What is your current occupation? (e.g. farmer, teacher, student, trader)',
-    )
     demo_education = models.StringField(
         label='What is the highest level of education you have completed?',
         choices=[
-            'No formal schooling',
-            'Primary school (completed)',
-            'Secondary school (completed)',
-            'Vocational / technical training',
-            'Some university or college (not completed)',
+            'No formal education',
+            'Some primary school (not completed)',
+            'Primary school completed (Standard 8 / KCPE)',
+            'Some secondary school (not completed)',
+            'Secondary school completed (Form 4 / KCSE)',
+            'Post-secondary certificate or diploma (TVET / college)',
             "University degree (Bachelor's or equivalent)",
             "Postgraduate degree (Master's or PhD)",
+            'Prefer not to say',
+        ],
+    )
+    demo_occupation = models.StringField(
+        label='What is your current main occupation?',
+        choices=[
+            'Farmer / agricultural worker',
+            'Casual / manual labourer',
+            'Trader / market vendor / petty business',
+            'Artisan / skilled tradesperson (e.g. mechanic, tailor, carpenter)',
+            'Teacher / education professional',
+            'Healthcare worker',
+            'Domestic worker',
+            'Professional / office worker',
+            'Student',
+            'Unemployed / not currently working',
+            'Other',
+        ],
+    )
+    demo_occupation_other = models.LongStringField(
+        label='Please describe your occupation:',
+        blank=True,
+    )
+    demo_break_autonomy = models.StringField(
+        label='In your usual work, do you choose freely when to take a break, or is it fixed?',
+        choices=[
+            'I can always choose freely when to take a break',
+            'I can usually choose, but with some restrictions',
+            'My break times are mostly set by my work or employer',
+            'My break times are always fixed — I have no choice',
+            'Not applicable / I do not currently work',
+        ],
+    )
+    demo_employment_type = models.StringField(
+        label='Do you have a salaried job or do you do casual work?',
+        choices=[
+            'Salaried / permanent employee',
+            'Casual / day labourer',
+            'Self-employed / own business',
+            'Unpaid family worker',
+            'I do not currently work',
+            'Other',
         ],
     )
     demo_income = models.StringField(
@@ -188,7 +238,15 @@ class Player(BasePlayer):
         blank=True,
     )
 
-    # ----- Timestamps -----
+    # ----- Page-level timestamps (Unix seconds, set in before_next_page) -----
+    ts_consented         = models.FloatField(null=True)  # Consent completed
+    ts_instructions_done = models.FloatField(null=True)  # Tutorial completed
+    ts_break_choice_made = models.FloatField(null=True)  # Break choice submitted
+    ts_break_end         = models.FloatField(null=True)  # Break wait completed
+    ts_demographics_done = models.FloatField(null=True)  # Demographics submitted
+    bridge_start_time    = models.FloatField(null=True)  # Bridge segment started
+
+    # ----- Legacy task timestamps -----
     captcha_start_time   = models.FloatField(null=True)
     captcha2_start_time  = models.FloatField(null=True)
     ordered_start_time   = models.FloatField(null=True)
@@ -673,9 +731,10 @@ def custom_export(players):
         'session_code',
         'time_started_utc',
         'experiment_end_time',
-        # Field ID & condition
+        # Field ID, condition & treatment
         'field_id',
         'condition',
+        'treat',
         # Config
         'task_type',
         'task_minutes',
@@ -686,11 +745,24 @@ def custom_export(players):
         # Demographics
         'demo_age',
         'demo_gender',
-        'demo_occupation',
         'demo_education',
+        'demo_occupation',
+        'demo_occupation_other',
+        'demo_break_autonomy',
+        'demo_employment_type',
         'demo_income',
         'demo_hours_slept',
         'demo_breakfast',
+        # Page-level timestamps
+        'ts_consented',
+        'ts_instructions_done',
+        'matrix_start_time',
+        'ts_break_choice_made',
+        'ts_break_end',
+        'bridge_start_time',
+        'matrix2_start_time',
+        'ts_demographics_done',
+        'experiment_end_time',
         # Payoff summary (participant-level, repeated on every row)
         'seg1_tasks_attempted',
         'seg1_tasks_correct',
@@ -732,6 +804,7 @@ def custom_export(players):
                 player.field_maybe_none('experiment_end_time'),
                 player.field_maybe_none('field_id'),
                 player.field_maybe_none('condition'),
+                player.field_maybe_none('treat'),
                 session.config.get('task_type', ''),
                 session.config.get('task_minutes', ''),
                 session.config.get('break_minutes', ''),
@@ -739,11 +812,23 @@ def custom_export(players):
                 player.field_maybe_none('break_choice'),
                 player.field_maybe_none('demo_age'),
                 player.field_maybe_none('demo_gender'),
-                player.field_maybe_none('demo_occupation'),
                 player.field_maybe_none('demo_education'),
+                player.field_maybe_none('demo_occupation'),
+                player.field_maybe_none('demo_occupation_other'),
+                player.field_maybe_none('demo_break_autonomy'),
+                player.field_maybe_none('demo_employment_type'),
                 player.field_maybe_none('demo_income'),
                 player.field_maybe_none('demo_hours_slept'),
                 player.field_maybe_none('demo_breakfast'),
+                player.field_maybe_none('ts_consented'),
+                player.field_maybe_none('ts_instructions_done'),
+                player.field_maybe_none('matrix_start_time'),
+                player.field_maybe_none('ts_break_choice_made'),
+                player.field_maybe_none('ts_break_end'),
+                player.field_maybe_none('bridge_start_time'),
+                player.field_maybe_none('matrix2_start_time'),
+                player.field_maybe_none('ts_demographics_done'),
+                player.field_maybe_none('experiment_end_time'),
                 player.field_maybe_none('seg1_tasks_attempted'),
                 player.field_maybe_none('seg1_tasks_correct'),
                 player.field_maybe_none('bridge_tasks_attempted'),
@@ -774,10 +859,25 @@ def custom_export(players):
 
 
 # ---------------------------------------------------------------------------
+# Language routing helper
+# ---------------------------------------------------------------------------
+
+def _tpl(player, name):
+    """Return the localised template path for a given page name."""
+    lang = player.session.config.get('language', 'en')
+    if lang == 'sw':
+        return 'symbol_matrix/{}_swa.html'.format(name)
+    return 'symbol_matrix/{}.html'.format(name)
+
+
+# ---------------------------------------------------------------------------
 # Pages — shared / legacy
 # ---------------------------------------------------------------------------
 
 class Welcome(Page):
+    def get_template_names(self):
+        return [_tpl(self.player, 'Welcome')]
+
     @staticmethod
     def vars_for_template(player):
         return {
@@ -836,6 +936,9 @@ class BreakChoice(Page):
     form_model  = 'player'
     form_fields = ['break_choice']
 
+    def get_template_names(self):
+        return [_tpl(self.player, 'BreakChoice')]
+
     @staticmethod
     def is_displayed(player):
         return (player.session.config.get('task_type') == 'matrix'
@@ -848,8 +951,15 @@ class BreakChoice(Page):
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
         }
 
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.ts_break_choice_made = time.time()
+
 
 class BreakWait(Page):
+    def get_template_names(self):
+        return [_tpl(self.player, 'BreakWait')]
+
     @staticmethod
     def is_displayed(player):
         return player.field_maybe_none('break_choice') == True
@@ -861,6 +971,10 @@ class BreakWait(Page):
     @staticmethod
     def vars_for_template(player):
         return {'duration_seconds': _break_duration(player)}
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.ts_break_end = time.time()
 
 
 class BridgeTask(Page):
@@ -1150,9 +1264,16 @@ def _matrix_practice_live_method(player, data):
 # ---------------------------------------------------------------------------
 
 class MatrixInstructions(Page):
+    def get_template_names(self):
+        return [_tpl(self.player, 'MatrixInstructions')]
+
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.ts_instructions_done = time.time()
 
     @staticmethod
     def vars_for_template(player):
@@ -1166,6 +1287,9 @@ class MatrixInstructions(Page):
 class MatrixPractice(Page):
     """Two free-form practice trials — no data recorded, no hints."""
 
+    def get_template_names(self):
+        return [_tpl(self.player, 'MatrixPractice')]
+
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
@@ -1175,8 +1299,51 @@ class MatrixPractice(Page):
         return _matrix_practice_live_method(player, data)
 
 
+class PaymentInfo(Page):
+    """Payment information screen — shown after instructions, before the task starts."""
+
+    def get_template_names(self):
+        return [_tpl(self.player, 'PaymentInfo')]
+
+    @staticmethod
+    def is_displayed(player):
+        return player.session.config.get('task_type') == 'matrix'
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
+            'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
+            'condition':     player.field_maybe_none('condition') or 'choice',
+            'treat':         player.field_maybe_none('treat') or 'no_treat',
+        }
+
+
+class FutureWork(Page):
+    """Future work / re-hire information — content varies by treat vs no_treat."""
+
+    def get_template_names(self):
+        return [_tpl(self.player, 'FutureWork')]
+
+    @staticmethod
+    def is_displayed(player):
+        return player.session.config.get('task_type') == 'matrix'
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
+            'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
+            'condition':     player.field_maybe_none('condition') or 'choice',
+            'treat':         player.field_maybe_none('treat') or 'no_treat',
+        }
+
+
 class MatrixStartScreen(Page):
     """Pre-task reminder screen — participant clicks Start to begin."""
+
+    def get_template_names(self):
+        return [_tpl(self.player, 'MatrixStartScreen')]
 
     @staticmethod
     def is_displayed(player):
@@ -1194,6 +1361,9 @@ class MatrixStartScreen(Page):
 class MatrixTask(Page):
     """Segment 1 of the matrix task (before the break / bridge)."""
 
+    def get_template_names(self):
+        return [_tpl(self.player, 'MatrixTask')]
+
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
@@ -1205,7 +1375,9 @@ class MatrixTask(Page):
     @staticmethod
     def vars_for_template(player):
         player.matrix_start_time = time.time()
-        return {'duration_seconds': _task_duration(player), 'block_label': 'Session 1 of 2'}
+        lang = player.session.config.get('language', 'en')
+        label = 'Kipindi cha 1 kati ya 2' if lang == 'sw' else 'Session 1 of 2'
+        return {'duration_seconds': _task_duration(player), 'block_label': label}
 
     @staticmethod
     def live_method(player, data):
@@ -1222,7 +1394,9 @@ class MatrixTask(Page):
 
 class MatrixBridgeTask(Page):
     """Bridge segment for participants who skip the break (same task UI, no timer)."""
-    template_name = 'symbol_matrix/MatrixTask.html'
+
+    def get_template_names(self):
+        return [_tpl(self.player, 'MatrixTask')]
 
     @staticmethod
     def is_displayed(player):
@@ -1235,7 +1409,10 @@ class MatrixBridgeTask(Page):
 
     @staticmethod
     def vars_for_template(player):
-        return {'duration_seconds': _break_duration(player), 'block_label': 'Continue working'}
+        player.bridge_start_time = time.time()
+        lang = player.session.config.get('language', 'en')
+        label = 'Endelea Kufanya Kazi' if lang == 'sw' else 'Continue working'
+        return {'duration_seconds': _break_duration(player), 'block_label': label}
 
     @staticmethod
     def live_method(player, data):
@@ -1244,7 +1421,9 @@ class MatrixBridgeTask(Page):
 
 class MatrixTask2(Page):
     """Segment 2 of the matrix task (after break / bridge)."""
-    template_name = 'symbol_matrix/MatrixTask.html'
+
+    def get_template_names(self):
+        return [_tpl(self.player, 'MatrixTask')]
 
     @staticmethod
     def is_displayed(player):
@@ -1257,7 +1436,9 @@ class MatrixTask2(Page):
     @staticmethod
     def vars_for_template(player):
         player.matrix2_start_time = time.time()
-        return {'duration_seconds': _task_duration(player), 'block_label': 'Session 2 of 2'}
+        lang = player.session.config.get('language', 'en')
+        label = 'Kipindi cha 2 kati ya 2' if lang == 'sw' else 'Session 2 of 2'
+        return {'duration_seconds': _task_duration(player), 'block_label': label}
 
     @staticmethod
     def live_method(player, data):
@@ -1265,6 +1446,9 @@ class MatrixTask2(Page):
 
 
 class Goodbye(Page):
+    def get_template_names(self):
+        return [_tpl(self.player, 'Goodbye')]
+
     @staticmethod
     def vars_for_template(player):
         # Record end time
@@ -1282,41 +1466,43 @@ class Goodbye(Page):
             player.seg2_tasks_correct
         )
 
-        # Payoff calculation
+        # Payoff calculation — 1 Ksh per correct grid, all sessions equal
+        # (payoff_seg1_bridge_credits / payoff_seg2_credits fields reused for storage)
         player.payoff_seg1_bridge_credits = (
             player.seg1_tasks_correct + player.bridge_tasks_correct
-        )   # 1 token per correct task in seg1 + bridge ($0.004 each)
-        player.payoff_seg2_credits = 2 * player.seg2_tasks_correct
-        # 2 tokens per correct task in seg2 ($0.004 each = $0.008 per task)
-        total_credits = player.payoff_seg1_bridge_credits + player.payoff_seg2_credits
-        player.final_payoff_dollars = round(3.00 + 0.004 * total_credits, 2)
+        )
+        player.payoff_seg2_credits  = player.seg2_tasks_correct
+        total_correct_grids         = player.total_tasks_correct
+        participation_fee_ksh       = 350
+        transport_fee_ksh           = 200
+        bonus_ksh                   = total_correct_grids  # 1 Ksh per correct grid
+        player.final_payoff_dollars = float(participation_fee_ksh + transport_fee_ksh + bonus_ksh)
 
-        # Also write to oTree's built-in payoff field (in points = dollars here)
+        # Also write to oTree's built-in payoff field
         player.payoff = player.final_payoff_dollars
 
+        break_choice = player.field_maybe_none('break_choice')
+
         return {
-            'seg1_attempted':      player.seg1_tasks_attempted,
-            'seg1_correct':        player.seg1_tasks_correct,
-            'bridge_attempted':    player.bridge_tasks_attempted,
-            'bridge_correct':      player.bridge_tasks_correct,
-            'seg2_attempted':      player.seg2_tasks_attempted,
-            'seg2_correct':        player.seg2_tasks_correct,
-            'total_attempted':     player.total_tasks_attempted,
-            'total_correct':       player.total_tasks_correct,
-            'seg1_bridge_credits': player.payoff_seg1_bridge_credits,
-            'seg2_credits':        player.payoff_seg2_credits,
-            'total_credits':       total_credits,
-            'final_payoff':        player.final_payoff_dollars,
-            'break_choice':        player.field_maybe_none('break_choice'),
-            'condition':           player.field_maybe_none('condition') or 'choice',
-            'task_minutes':        player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
-            'break_minutes':       player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
-            'seg1_total_minutes':  (player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT) +
-                                    player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT)),
-            # Pre-formatted dollar strings (avoids Jinja2 filter issues)
-            'seg1_bridge_dollars': '{:.3f}'.format(player.payoff_seg1_bridge_credits * 0.004),
-            'seg2_dollars':        '{:.3f}'.format(player.payoff_seg2_credits * 0.004),
-            'final_payoff_str':    '{:.2f}'.format(player.final_payoff_dollars),
+            'seg1_attempted':    player.seg1_tasks_attempted,
+            'seg1_correct':      player.seg1_tasks_correct,
+            'bridge_attempted':  player.bridge_tasks_attempted,
+            'bridge_correct':    player.bridge_tasks_correct,
+            'seg2_attempted':    player.seg2_tasks_attempted,
+            'seg2_correct':      player.seg2_tasks_correct,
+            'total_attempted':   player.total_tasks_attempted,
+            'total_correct':     player.total_tasks_correct,
+            'participation_fee': participation_fee_ksh,
+            'transport_fee':     transport_fee_ksh,
+            'seg1_bonus':        player.seg1_tasks_correct,
+            'bridge_bonus':      player.bridge_tasks_correct,
+            'seg2_bonus':        player.seg2_tasks_correct,
+            'total_bonus':       bonus_ksh,
+            'total_payoff':      participation_fee_ksh + transport_fee_ksh + bonus_ksh,
+            'break_choice':      break_choice,
+            'condition':         player.field_maybe_none('condition') or 'choice',
+            'task_minutes':      player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
+            'break_minutes':     player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
         }
 
 
@@ -1329,6 +1515,12 @@ class FieldIDEntry(Page):
     form_model  = 'player'
     form_fields = ['field_id']
 
+    def get_template_names(self):
+        lang = self.player.session.config.get('language', 'en')
+        if lang == 'sw':
+            return ['symbol_matrix/FieldIDEntry_swa.html']
+        return ['symbol_matrix/FieldIDEntry.html']
+
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
@@ -1336,21 +1528,28 @@ class FieldIDEntry(Page):
     @staticmethod
     def error_message(player, values):
         fid = (values.get('field_id') or '').strip()
-        if not fid.isdigit() or len(fid) != 3:
-            return 'Please enter a valid 3-digit Field ID (e.g. 101, 215, 302).'
+        if not fid.isdigit() or len(fid) != 4:
+            return 'Please enter a valid 4-digit Field ID (e.g. 1101, 2215, 3202).'
         if fid[0] not in ('1', '2', '3'):
             return 'Field ID must start with 1, 2, or 3. Please check with the research assistant.'
+        if fid[1] not in ('1', '2'):
+            return 'Field ID second digit must be 1 or 2. Please check with the research assistant.'
 
     @staticmethod
     def before_next_page(player, timeout_happened):
-        player.field_id = player.field_id.strip()
+        player.field_id  = player.field_id.strip()
         player.condition = _get_condition(player)
+        player.treat     = _get_treat(player)
+        player.language  = player.session.config.get('language', 'en')
 
 
 class Consent(Page):
     """Informed consent — must tick checkbox to proceed."""
     form_model  = 'player'
     form_fields = ['consented']
+
+    def get_template_names(self):
+        return [_tpl(self.player, 'Consent')]
 
     @staticmethod
     def is_displayed(player):
@@ -1372,24 +1571,37 @@ class Consent(Page):
         if not values.get('consented'):
             return 'Please tick the checkbox to confirm your consent before continuing.'
 
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.ts_consented = time.time()
+
 
 class Demographics(Page):
     """Post-task demographic survey — shown after the second session, before the payoff."""
     form_model  = 'player'
     form_fields = [
-        'demo_age', 'demo_gender', 'demo_occupation',
-        'demo_education', 'demo_income', 'demo_hours_slept', 'demo_breakfast',
+        'demo_age', 'demo_gender', 'demo_education',
+        'demo_occupation', 'demo_occupation_other',
+        'demo_break_autonomy', 'demo_employment_type',
+        'demo_income', 'demo_hours_slept', 'demo_breakfast',
     ]
+
+    def get_template_names(self):
+        return [_tpl(self.player, 'Demographics')]
 
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
 
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.ts_demographics_done = time.time()
+
 
 page_sequence = [
     FieldIDEntry,    # matrix: participant enters field ID
-    Welcome,
     Consent,         # matrix: informed consent
+    Welcome,
     # Legacy instructions + training (hidden for matrix)
     Instructions,
     TrainingExample,
@@ -1401,6 +1613,8 @@ page_sequence = [
     CombinedTask,
     # Matrix task — instructions (includes free-form demo) + real segment 1
     MatrixInstructions,
+    PaymentInfo,         # payment explanation (after instructions, before task)
+    FutureWork,          # future work / re-hire framing (treat vs no_treat)
     MatrixStartScreen,
     MatrixTask,
     # Break
