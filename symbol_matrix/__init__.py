@@ -1566,7 +1566,11 @@ class Demographics(Page):
 
     @staticmethod
     def vars_for_template(player):
-        return {'language': _lang(player)}
+        return {
+            'language':          _lang(player),
+            'demo_age_choices':  list(range(18, 51)),
+            'demo_hours_choices': list(range(0, 13)),
+        }
 
     @staticmethod
     def before_next_page(player, timeout_happened):

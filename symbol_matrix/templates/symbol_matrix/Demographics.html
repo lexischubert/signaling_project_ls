@@ -93,7 +93,133 @@
     </div>
 
     <div class="d-body">
+
+      {% if language == 'sw' %}
+
+      <!-- Swali 1: Umri -->
+      <div class="controls">
+        <label class="col-form-label" for="id_demo_age">Una umri gani (kwa miaka)?</label>
+        <select class="form-control" id="id_demo_age" name="demo_age">
+          <option value="">---------</option>
+          {% for age in demo_age_choices %}<option value="{{ age }}">{{ age }}</option>{% endfor %}
+        </select>
+      </div>
+
+      <!-- Swali 2: Jinsia -->
+      <div class="controls">
+        <label class="col-form-label" for="id_demo_gender">Jinsia yako ni ipi?</label>
+        <select class="form-control" id="id_demo_gender" name="demo_gender">
+          <option value="">---------</option>
+          <option value="Male">Mwanaume</option>
+          <option value="Female">Mwanamke</option>
+          <option value="Non-binary / gender diverse">Sio mwanaume wala mwanamke (non-binary / jinsia tofauti)</option>
+          <option value="Prefer not to say">Napendelea kutosema</option>
+        </select>
+      </div>
+
+      <!-- Swali 3: Elimu -->
+      <div class="controls">
+        <label class="col-form-label" for="id_demo_education">Ni kiwango gani cha juu zaidi cha elimu ambacho umekamilisha?</label>
+        <select class="form-control" id="id_demo_education" name="demo_education">
+          <option value="">---------</option>
+          <option value="No formal education">Hakuna elimu rasmi</option>
+          <option value="Some primary school (not completed)">Shule ya msingi (haijakamilika)</option>
+          <option value="Primary school completed (Standard 8 / KCPE)">Shule ya msingi imekamilika (Darasa la 8 / KCPE)</option>
+          <option value="Some secondary school (not completed)">Shule ya sekondari (haijakamilika)</option>
+          <option value="Secondary school completed (Form 4 / KCSE)">Shule ya sekondari imekamilika (Kidato cha 4 / KCSE)</option>
+          <option value="Post-secondary certificate or diploma (TVET / college)">Cheti au diploma ya baada ya sekondari (TVET / chuo)</option>
+          <option value="University degree (Bachelor's or equivalent)">Shahada ya chuo kikuu (Bachelor au sawa)</option>
+          <option value="Postgraduate degree (Master's or PhD)">Shahada ya uzamili au uzamivu (Master au PhD)</option>
+          <option value="Prefer not to say">Napendelea kutosema</option>
+        </select>
+      </div>
+
+      <!-- Swali 4: Kazi -->
+      <div class="controls">
+        <label class="col-form-label" for="id_demo_occupation">Kazi yako kuu ya sasa ni ipi?</label>
+        <select class="form-control" id="id_demo_occupation" name="demo_occupation">
+          <option value="">---------</option>
+          <option value="Farmer / agricultural worker">Mkulima / mfanyakazi wa kilimo</option>
+          <option value="Casual / manual labourer">Mfanyakazi wa vibarua / kazi za mikono</option>
+          <option value="Trader / market vendor / petty business">Mfanyabiashara / muuzaji sokoni / biashara ndogo</option>
+          <option value="Artisan / skilled tradesperson (e.g. mechanic, tailor, carpenter)">Fundi stadi (mf. mekanika, fundi cherehani, seremala)</option>
+          <option value="Teacher / education professional">Mwalimu / mtaalamu wa elimu</option>
+          <option value="Healthcare worker">Mfanyakazi wa afya</option>
+          <option value="Domestic worker">Mfanyakazi wa nyumbani</option>
+          <option value="Professional / office worker">Mtaalamu / mfanyakazi wa ofisini</option>
+          <option value="Student">Mwanafunzi</option>
+          <option value="Unemployed / not currently working">Sina kazi kwa sasa</option>
+          <option value="Other">Nyingine</option>
+        </select>
+      </div>
+
+      <!-- Swali 4b: Kazi nyingine (inaonekana tu kama "Nyingine" imechaguliwa) -->
+      <div class="controls">
+        <label class="col-form-label" for="id_demo_occupation_other">Tafadhali eleza kazi yako:</label>
+        <textarea class="form-control" id="id_demo_occupation_other" name="demo_occupation_other" rows="2"></textarea>
+      </div>
+
+      <!-- Swali 5: Uhuru wa mapumziko -->
+      <div class="controls">
+        <label class="col-form-label" for="id_demo_break_autonomy">Katika kazi yako ya kawaida, unaweza kuchagua mwenyewe wakati wa kuchukua mapumziko au umewekewa muda maalum?</label>
+        <select class="form-control" id="id_demo_break_autonomy" name="demo_break_autonomy">
+          <option value="">---------</option>
+          <option value="I can always choose freely when to take a break">Naweza kuchagua kwa uhuru wakati wowote wa kupumzika</option>
+          <option value="I can usually choose, but with some restrictions">Mara nyingi nachagua, lakini kuna vikwazo fulani</option>
+          <option value="My break times are mostly set by my work or employer">Muda wangu wa mapumziko huamuliwa na kazi au mwajiri</option>
+          <option value="My break times are always fixed — I have no choice">Muda wa mapumziko umewekwa kabisa — sina chaguo</option>
+          <option value="Not applicable / I do not currently work">Haitumiki / sifanyi kazi kwa sasa</option>
+        </select>
+      </div>
+
+      <!-- Swali 6: Aina ya ajira -->
+      <div class="controls">
+        <label class="col-form-label" for="id_demo_employment_type">Je, una kazi ya mshahara au unafanya vibarua?</label>
+        <select class="form-control" id="id_demo_employment_type" name="demo_employment_type">
+          <option value="">---------</option>
+          <option value="Salaried / permanent employee">Mfanyakazi wa mshahara / ajira ya kudumu</option>
+          <option value="Casual / day labourer">Mfanyakazi wa vibarua / kazi ya siku</option>
+          <option value="Self-employed / own business">Najiajiri / nina biashara yangu</option>
+          <option value="Unpaid family worker">Mfanyakazi wa familia bila malipo</option>
+          <option value="I do not currently work">Sifanyi kazi kwa sasa</option>
+          <option value="Other">Nyingine</option>
+        </select>
+      </div>
+
+      <!-- Swali 7: Mapato -->
+      <div class="controls">
+        <label class="col-form-label" for="id_demo_income">Mapato ya kaya yako kwa mwezi ni takribani kiasi gani?</label>
+        <select class="form-control" id="id_demo_income" name="demo_income">
+          <option value="">---------</option>
+          <option value="Less than KES 5,000">Chini ya KES 5,000</option>
+          <option value="KES 5,000 – 14,999">KES 5,000 – 14,999</option>
+          <option value="KES 15,000 – 29,999">KES 15,000 – 29,999</option>
+          <option value="KES 30,000 – 59,999">KES 30,000 – 59,999</option>
+          <option value="KES 60,000 – 99,999">KES 60,000 – 99,999</option>
+          <option value="KES 100,000 or more">KES 100,000 au zaidi</option>
+          <option value="Prefer not to say">Napendelea kutosema</option>
+        </select>
+      </div>
+
+      <!-- Swali 8: Masaa ya kulala -->
+      <div class="controls">
+        <label class="col-form-label" for="id_demo_hours_slept">Ulilala kwa saa ngapi jana usiku?</label>
+        <select class="form-control" id="id_demo_hours_slept" name="demo_hours_slept">
+          <option value="">---------</option>
+          {% for h in demo_hours_choices %}<option value="{{ h }}">{{ h }}</option>{% endfor %}
+        </select>
+      </div>
+
+      <!-- Swali 9: Kifungua kinywa -->
+      <div class="controls">
+        <label class="col-form-label" for="id_demo_breakfast">Ulikula nini kwa kifungua kinywa leo? (andika "hakuna" kama hukula)</label>
+        <textarea class="form-control" id="id_demo_breakfast" name="demo_breakfast" rows="2"></textarea>
+      </div>
+
+      {% else %}
       {{ formfields }}
+      {% endif %}
+
     </div>
 
     <div class="d-footer">
