@@ -25,17 +25,18 @@
 <div class="consent-wrap">
   <div class="consent-card">
     <div class="c-header">
-      <h4>{% if language == 'sw' %}Idhini ya Ufahamu{% else %}Informed Consent{% endif %}</h4>
+      <h4>{% if language == 'sw' %}Idhini ya Mshiriki{% else %}Informed Consent{% endif %}</h4>
     </div>
     <div class="c-body">
 
       {% if language == 'sw' %}
 
         <p class="section-title">Madhumuni ya utafiti</p>
-        <p>Tunakukaribisha kushiriki katika utafiti wa maamuzi na kazi za akili.
-        Utafiti huu unafanywa na watafiti kutoka Massachusetts Institute of Technology,
-        Chuo Kikuu cha California Berkeley, na Chuo Kikuu cha Zurich.
-        Utafiti huu unahusisha kujibu haraka na kwa usahihi picha zinazoonekana kwenye skrini yako.</p>
+        <p>Tunakukaribisha kushiriki katika utafiti kuhusu  kufanya  maamuzi na kazi za akili. Utafiti
+          huu unafanywa na watafiti kutoka Massachusetts Institute of Technology, Chuo
+          Kikuu cha California Berkeley, na Chuo Kikuu cha Zurich. Utafiti huu unahusisha
+          kujibu kwa haraka na kwa usahihi picha zinazoonekana kwenye skrini yako.
+        </p>
 
         <p class="section-title">Utafanya nini</p>
         <p>
@@ -43,24 +44,28 @@
             Utakamilisha kazi ya kulinganisha alama: kipindi kina muda wa dakika 90, bila mapumziko.
           {% elif condition == 'forced_break' %}
             Utakamilisha kazi ya kulinganisha alama katika vipindi viwili vya
-            <strong>dakika {{ task_minutes }}</strong> kila kimoja, vikigawanywa na
+            <strong>dakika {{ task_minutes }}</strong> kila moja, vikigawanywa na
             <strong>mapumziko ya lazima ya dakika {{ break_minutes }}</strong>.
           {% else %}
             Utakamilisha kazi ya kulinganisha alama katika vipindi viwili vya
-            <strong>dakika {{ task_minutes }}</strong> kila kimoja, na mapumziko ya hiari ya
+            <strong>dakika {{ task_minutes }}</strong> kila moja, na mapumziko ya hiari ya
             dakika {{ break_minutes }} kati ya vipindi.
           {% endif %}
-          Katika raundi moja, utaona alama lengwa na lazima uchague alama zote zinazolingana
-          kutoka kwenye gridi ya alama 100.
+            Katika raundi moja, utaona alama  ambayo inalengwa na lazima uchague alama zote
+            zinazolingana kutoka kwenye gridi ya alama 100.
+
         </p>
 
         <p class="section-title">Malipo</p>
-        <p>Utapokea <strong>malipo ya ushiriki ya Ksh 350</strong> kwa kukamilisha utafiti wote.
-        Pia tunafunika nauli yako ya Ksh 200.
-        Zaidi ya hayo, unaweza kupata malipo ya ziada ya bonasi kulingana na usahihi na kasi yako ya kazi.
-        Kwa jumla, unaweza kutarajia kupata kati ya Ksh 600–700.
-        Mapato yako yote yatalipwa kupitia M-PESA.
-        Tutahesabu mapato mara moja, lakini inaweza kuchukua siku moja au mbili kupokea malipo.</p>
+        <p>
+          Utapokea <strong>malipo ya kushiriki ya Ksh 350</strong> kwa kukamilisha utafiti wote. Pia
+          tutakupa nauli yako ya Ksh 200. Zaidi ya hayo, unaweza kupata malipo ya ziada
+          ya bonasi kulingana na usahihi na kasi (haraka) yako ya kazi. Kwa jumla, unaweza
+          kutarajia kupata kati ya Ksh 600–700. Unaweza kupata  pesa kwa kila kazi
+          sahihi. Mapato yako yote yatalipwa kupitia M-PESA. Tutahesabu mapato mara moja,
+          lakini inaweza kuchukua siku moja au mbili kupokea malipo kwa sababu za
+          utawala.
+        </p>
 
         <p class="section-title">Hatari na manufaa</p>
         <p>Hakuna hatari zinazojulikana zaidi ya hatari za kawaida za matumizi ya kompyuta.
@@ -68,9 +73,12 @@
         lakini majibu yako yatachangia utafiti wa kisayansi.</p>
 
         <p class="section-title">Usiri</p>
-        <p>Taarifa zinazotambulisha zitahifadhiwa kwa siri na hazitashirikiwa nje ya timu ya utafiti.
-        Data zote huhifadhiwa kwa usalama na zitaripotiwa tu kwa njia isiyotambulisha watu binafsi.
-        Jina lako halitahusishwa na majibu yako katika chapisho lolote.</p>
+        <p>Taarifa zinazotambulisha mtu zitahifadhiwa kwa siri na  hazitasambazwa nje ya timu
+        ya utafiti. Data zote huhifadhiwa kwa usalama na zitaripotiwa tu kwa njia
+        isiyotambulisha watu binafsi, kwa ujumla. Jina lako halitahusishwa na majibu
+        yako katika chapisho lolote. Nambari yako ya mshiriki (si jina lako) itatumika
+        kutambua data yako.
+        </p>
 
         <p class="section-title">Ushiriki wa hiari</p>
         <p>Ushiriki ni wa hiari kabisa, lakini lazima uwe na umri wa zaidi ya miaka 18.
@@ -107,9 +115,11 @@
         <p>You will receive a <strong>participation payment of Ksh 350</strong> for completing the full study.
         We also cover your transport for Ksh 200.
         In addition, you could earn additional bonus payments based on task accuracy and speed.
-        In total, you can expect to earn around Ksh 600–700.
+        In total, you can expect to earn around Ksh 600–700. You can earn money for every correct task.
         Your total earnings will be paid via MPesa.
-        We will calculate earnings immediately, but it may take a day or two for the payments to arrive.</p>
+        We will calculate earnings immediately, but it may take a day or two for the payments to arrive because of
+administrative reasons.
+.</p>
 
         <p class="section-title">Risks and benefits</p>
         <p>There are no known risks beyond those of everyday computer use.
