@@ -290,8 +290,8 @@
     {% if language == 'sw' %}
     <p style="font-weight:700; font-size:clamp(.95rem,2.6vmin,1.15rem); color:#1e293b; margin:0 0 16px; text-align:center;">Utakachofanya</p>
     <ul style="font-size:clamp(.85rem,2.3vmin,1rem); color:#334155; line-height:1.7; padding-left:1.2rem; margin:0;">
-      <li>Utaona gridi kubwa.</li>
-      <li>Kazi yako ni kutafuta alama maalum katika kila gridi, na kuigusa haraka iwezekanavyo kwa usahihi.</li>
+      <li>Utaona jedwali kubwa.</li>
+      <li>Kazi yako ni kutafuta alama maalum katika kila jedwali, na kuigusa haraka iwezekanavyo kwa usahihi.</li>
       <li>Sasa tutapitia hatua na kazi pamoja.</li>
       <li>Malipo yako ya kazi yatategemea kasi na usahihi.</li>
     </ul>
@@ -308,7 +308,7 @@
 
   <!-- Target row (matches real task layout) -->
   <div id="demo-target-row">
-    <span id="demo-prompt">{% if language == 'sw' %}Tafuta alama hii kwenye gridi:{% else %}Find this symbol in the grid:{% endif %}</span>
+    <span id="demo-prompt">{% if language == 'sw' %}Tafuta alama hii kwenye jedwali:{% else %}Find this symbol in the grid:{% endif %}</span>
     <div id="demo-target"></div>
   </div>
 
@@ -444,7 +444,7 @@ function step1() {
   sizeGrid();
   setDots(2);
   setBanner('👁', _lang === 'sw'
-    ? 'Iliyoangaziwa kwa bluu, hapa chini, ndiyo alama unayohitaji kutafuta kwenye gridi. Bonyeza IFUATAYO kuendelea na maelekezo.'
+    ? 'Iliyoangaziwa kwa bluu, hapa chini, ndiyo alama unayohitaji kutafuta kwenye jedwali. Bonyeza *Sehemu inayofuata (NEXT)* kuendelea na maelekezo.'
     : 'Highlighted in blue, just below, is the symbol you need to find in the grid. Click on NEXT to continue with the instructions.');
   document.getElementById('demo-grid').classList.add('dim');
   document.getElementById('demo-target').classList.add('pulse');
@@ -463,7 +463,7 @@ function step2() {
   sizeGrid();
   setDots(3);
   setBanner('👆', _lang === 'sw'
-    ? 'Tafuta alama hii kwenye gridi. Kwa urahisi, tumeifanya ionekane kwa rangi ya machungwa. Ichague kwa kuigusa kwenye skrini.'
+    ? 'Tafuta alama hii kwenye jedwali. Ili kurahisisha, tumekuonyesha kwa rangi ya machungwa. Ichague kwa kuigusa kwenye skrini.'
     : 'Look for this symbol in the grid. For simplicity, we have highlighted it in orange. Select it by tapping on the screen.');
   document.getElementById('demo-grid').classList.remove('dim');
   showConfirm(false);
@@ -488,7 +488,7 @@ function step3() {
   sizeGrid();
   setDots(4);
   setBanner('👆', _lang === 'sw'
-    ? 'Kazi nzuri! Je, ukichagua alama isiyo sahihi kwa makosa? Iguse tena ili uiondoe. Jaribu hapa chini.'
+    ? 'Kazi nzuri! Ikiwa ukichagua alama isiyo sahihi kwa makosa? Iguse tena ili uiondoe. Jaribu hapa chini.'
     : 'Great job! What if you selected on the wrong symbol by mistake? Tap on it again to remove it. Give it a try below.');
   showConfirm(false);
 
@@ -508,7 +508,7 @@ function step4() {
   sizeGrid();
   setDots(5);
   setBanner('✋', _lang === 'sw'
-    ? 'Sasa tafuta alama ZOTE zinazofanana na uzichague kwenye gridi hapa chini kwa kuzigusa. Kwa urahisi, zimeangaziwa kwa rangi ya machungwa kwa maonyesho haya.'
+    ? 'Sasa tafuta alama ZOTE zinazofanana na uzichague kwenye jedwali hapa chini kwa kuzigusa. Kwa urahisi, zimeangaziwa kwa rangi ya machungwa kwa maonyesho haya.'
     : 'Now find ALL matching symbols and select them in the grid below by tapping on them. To make it simple, they are highlighted in orange for this demonstration.');
   showConfirm(false);
 
@@ -555,7 +555,7 @@ function step5() {
   sizeGrid();
   setDots(6);
   setBanner('✅', _lang === 'sw'
-    ? 'Unapofanya kazi hii, ukurasa HAUTABADILIKA kiotomatiki. Ukishaamini umechagua alama, utahitaji kubonyeza THIBITISHA chini. Gusa Thibitisha Uteuzi sasa.'
+    ? 'Unapofanya kazi hii, ukurasa *hautajibadilisha (CONFIRM)* wenyewe. Ukishaamini umechagua alama, utahitaji kubonyeza THIBITISHA chini. Gusa Thibitisha Uteuzi sasa.'
     : 'When you are working on this task, the page will NOT change automatically. Once you believe you selected symbols, you will need to hit CONFIRM at the bottom. Tap on Confirm Selection now.');
   showConfirm(true);
 
@@ -583,7 +583,7 @@ var selected2 = new Set();
 function step6() {
   setDots(7);
   setBanner('🎯', _lang === 'sw'
-    ? 'Sasa jaribu raundi kamili peke yako: tafuta na uguse alama zote zinazofanana. Kisha gusa Thibitisha Uteuzi ukisha.'
+    ? 'Sasa jaribu raundi kamili peke yako: tafuta na ubonyeze alama zote zinazofanana. Kisha gusa Thibitisha Uteuzi ukisha.'
     : 'Now try a full round by yourself: find and tap on all matching symbols. Then tap on Confirm Selection once you are done.');
   selected2 = new Set();
 
