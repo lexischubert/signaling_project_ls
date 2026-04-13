@@ -321,7 +321,7 @@
   <div id="action-area">
     <!-- Both buttons occupy the same space; only one is shown at a time -->
     <button type="button" class="action-btn" id="next-btn" style="display:none;">
-      {% if language == 'sw' %}Ifuatayo{% else %}Next{% endif %} &rarr;
+      {% if language == 'sw' %}Sehemu inayofuata (NEXT){% else %}Next{% endif %} &rarr;
     </button>
     <button type="button" class="action-btn" id="demo-confirm" disabled>
       &#10003;&nbsp;&nbsp;{% if language == 'sw' %}Thibitisha Uteuzi{% else %}Confirm Selection{% endif %}
@@ -494,14 +494,20 @@ function step3() {
     : 'Great job! What if you selected on the wrong symbol by mistake? Tap on it again to remove it. Give it a try below.');
   showConfirm(false);
 
-  var target = CORRECT[0];
-  var cell = cells[target];
-  cell.className = 'dcell selected hint';
-  cell.addEventListener('click', function onTap() {
-    cell.removeEventListener('click', onTap);
-    cell.className = 'dcell';
-    found.delete(target);
-    flash(step4);
+  // Two incorrect cells to pre-select — pick any indices NOT in CORRECT ([4,17,28,53,66,82])
+  var wrong = [10, 45];
+  var remaining = wrong.length;
+  wrong.forEach(function(idx) {
+    found.add(idx);
+    var cell = cells[idx];
+    cell.className = 'dcell selected hint';
+    cell.addEventListener('click', function onTap() {
+      cell.removeEventListener('click', onTap);
+      cell.className = 'dcell';
+      found.delete(idx);
+      remaining--;
+      if (remaining === 0) flash(step4);
+    });
   });
 }
 
