@@ -116,6 +116,20 @@ class Player(BasePlayer):
     seg2_tasks_attempted   = models.IntegerField(initial=0)
     seg2_tasks_correct     = models.IntegerField(initial=0)
 
+    # ----- Matrix — per-trial vectors (JSON arrays, one entry per submitted trial) -----
+    # correct_sequence: 1 = correct, 0 = incorrect, in submission order
+    # n_targets_sequence: number of target symbols in that grid
+    # timestamps: Unix timestamp (seconds) when Confirm was clicked
+    seg1_correct_sequence     = models.LongStringField(initial='[]')
+    seg1_n_targets_sequence   = models.LongStringField(initial='[]')
+    seg1_timestamps           = models.LongStringField(initial='[]')
+    bridge_correct_sequence   = models.LongStringField(initial='[]')
+    bridge_n_targets_sequence = models.LongStringField(initial='[]')
+    bridge_timestamps         = models.LongStringField(initial='[]')
+    seg2_correct_sequence     = models.LongStringField(initial='[]')
+    seg2_n_targets_sequence   = models.LongStringField(initial='[]')
+    seg2_timestamps           = models.LongStringField(initial='[]')
+
     # ----- Matrix — experiment-wide totals (computed at Goodbye) -----
     total_tasks_attempted = models.IntegerField(initial=0)
     total_tasks_correct   = models.IntegerField(initial=0)
@@ -651,6 +665,12 @@ def _combined_live_method(player, data):
 # Helpers — matrix (pure symbol) task
 # ---------------------------------------------------------------------------
 
+def _append_to_player_list(player, field_name, value):
+    """Append a single value to a JSON-array LongStringField on player."""
+    lst = json.loads(getattr(player, field_name))
+    lst.append(value)
+    setattr(player, field_name, json.dumps(lst))
+
 def _matrix_live_method(player, data, block):
     msg_type = data.get('type')
 
@@ -690,6 +710,8 @@ def _matrix_live_method(player, data, block):
             if is_correct:
                 player.seg2_tasks_correct += 1
 
+        ts = time.time()
+
         MatrixAnswer.create(
             player=player,
             block=block,
@@ -706,8 +728,14 @@ def _matrix_live_method(player, data, block):
             correct_cells=player.matrix_current_correct_cells,
             is_correct=is_correct,
             time_taken_ms=data.get('time_taken_ms', 0),
-            timestamp=time.time(),
+            timestamp=ts,
         )
+
+        # Append to per-trial vector fields (visible in wide export)
+        prefix = {1: 'seg1', 2: 'bridge', 3: 'seg2'}[block]
+        _append_to_player_list(player, f'{prefix}_correct_sequence',   int(is_correct))
+        _append_to_player_list(player, f'{prefix}_n_targets_sequence', player.matrix_current_n_targets)
+        _append_to_player_list(player, f'{prefix}_timestamps',         ts)
 
         # Generate next task and store ground truth immediately (no feedback to client)
         task = _generate_matrix_task()
