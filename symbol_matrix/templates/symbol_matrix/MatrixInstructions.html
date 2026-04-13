@@ -494,8 +494,12 @@ function step3() {
     : 'Great job! What if you selected on the wrong symbol by mistake? Tap on it again to remove it. Give it a try below.');
   showConfirm(false);
 
+  // Clear the blue selection left on CORRECT[0] from step 2
+  cells[CORRECT[0]].className = 'dcell';
+  found.delete(CORRECT[0]);
+
   // Two incorrect cells to pre-select — pick any indices NOT in CORRECT ([4,17,28,53,66,82])
-  var wrong = [10, 45];
+  var wrong = [3, 65];
   var remaining = wrong.length;
   wrong.forEach(function(idx) {
     found.add(idx);
@@ -529,6 +533,8 @@ function step4() {
     fd.appendChild(dot);
   });
   fd.classList.add('show');
+
+  found.clear();
 
   cells.forEach(function(cell, idx) {
     cell.className = 'dcell';

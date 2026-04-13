@@ -1459,7 +1459,7 @@ class Goodbye(Page):
         )
         player.payoff_seg2_credits  = player.seg2_tasks_correct
         total_correct_grids         = player.total_tasks_correct
-        participation_fee_ksh       = 350
+        participation_fee_ksh       = 300
         transport_fee_ksh           = 200
         bonus_ksh                   = total_correct_grids  # 1 Ksh per correct grid
         player.final_payoff_dollars = float(participation_fee_ksh + transport_fee_ksh + bonus_ksh)
