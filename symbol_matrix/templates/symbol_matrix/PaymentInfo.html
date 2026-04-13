@@ -20,20 +20,20 @@
   {% if language == 'sw' %}
     <h2>Jinsi utakavyolipwa</h2>
     <ul class="reminder-list">
-      <li><span class="ico">💰</span> Utapokea malipo ya ushiriki ya kawaida ya <strong>Ksh 350</strong> ukikamilisha kazi nzima hadi mwisho.</li>
-      <li><span class="ico">✅</span> Unaweza kupata bonasi kulingana na <strong>kasi na usahihi</strong> wako. Kwa kila gridi uliyokamilisha kwa usahihi, utapata <strong>Ksh 1</strong>.</li>
-      <li><span class="ico">📱</span> Mapato yako yatalipwa kupitia <strong>M-PESA</strong>.</li>
-      <li><span class="ico">🕐</span> Malipo yatafika ndani ya <strong>siku 2 zijazo</strong>.</li>
-      <li><span class="ico">💼</span> Tutakuambia kuhusu uwezekano wa kuajiriwa tena ukurasa unaofuata.</li>
+      <li><span class="ico">💰</span> <span>Utapokea malipo ya ushiriki ya kawaida ya <strong>Ksh 350</strong> ukikamilisha kazi nzima hadi mwisho.</span></li>
+      <li><span class="ico">✅</span> <span>Unaweza kupata bonasi kulingana na <strong>kasi na usahihi</strong> wako. Kwa kila gridi uliyokamilisha kwa usahihi, utapata <strong>Ksh 1</strong>.</span></li>
+      <li><span class="ico">📱</span> <span>Mapato yako yatalipwa kupitia <strong>M-PESA</strong>.</span></li>
+      <li><span class="ico">🕐</span> <span>Malipo yatafika ndani ya <strong>siku 2 zijazo</strong>.</span></li>
+      <li><span class="ico">💼</span> <span>Tutakuambia kuhusu uwezekano wa kuajiriwa tena ukurasa unaofuata.</span></li>
     </ul>
   {% else %}
     <h2>How you will get paid</h2>
     <ul class="reminder-list">
-      <li><span class="ico">💰</span> You will receive a fixed participation payment of <strong>Ksh 350</strong> if you complete the entire task until the end.</li>
-      <li><span class="ico">✅</span> You can earn bonus payments that will depend on your <strong>speed and accuracy</strong>. For each correctly completed grid, you can earn <strong>Ksh 1</strong>.</li>
-      <li><span class="ico">📱</span> Your earnings will be paid via <strong>M-PESA</strong>.</li>
-      <li><span class="ico">🕐</span> Payments will arrive within <strong>the next 2 days</strong>.</li>
-      <li><span class="ico">💼</span> We will tell you about possibilities of being rehired on the next page.</li>
+      <li><span class="ico">💰</span> <span>You will receive a fixed participation payment of <strong>Ksh 350</strong> if you complete the entire task until the end.</span></li>
+      <li><span class="ico">✅</span> <span>You can earn bonus payments that will depend on your <strong>speed and accuracy</strong>. For each correctly completed grid, you can earn <strong>Ksh 1</strong>.</span></li>
+      <li><span class="ico">📱</span> <span>Your earnings will be paid via <strong>M-PESA</strong>.</span></li>
+      <li><span class="ico">🕐</span> <span>Payments will arrive within <strong>the next 2 days</strong>.</span></li>
+      <li><span class="ico">💼</span> <span>We will tell you about possibilities of being rehired on the next page.</span></li>
     </ul>
   {% endif %}
 
@@ -44,7 +44,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('next-btn').addEventListener('click', function () {
-    var btn = document.querySelector('button[type=submit], input[type=submit]');
+    var btn = document.querySelector('.otree-btn-next, button[type=submit], input[type=submit]');
     if (btn) btn.click();
   });
 });

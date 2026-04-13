@@ -1380,6 +1380,8 @@ class MatrixTask(Page):
 class MatrixBridgeTask(Page):
     """Bridge segment for participants who skip the break (same task UI, no timer)."""
 
+    template_name = 'symbol_matrix/MatrixTask.html'
+
     @staticmethod
     def is_displayed(player):
         return (player.session.config.get('task_type') == 'matrix'

@@ -21,25 +21,25 @@
     <h2>Uwezekano wa kazi ya baadaye</h2>
     <ul class="reminder-list">
       {% if treat == 'treat' %}
-        <li><span class="ico">👔</span> Wafanyakazi wengine watachaguliwa na msimamizi wa kuajiri, ambaye pia yuko hapa leo, warudi kwa kipindi tofauti kesho.</li>
+        <li><span class="ico">👔</span> <span>Wafanyakazi wengine watachaguliwa na msimamizi wa kuajiri, ambaye pia yuko hapa leo, warudi kwa kipindi tofauti kesho.</span></li>
       {% else %}
-        <li><span class="ico">📋</span> Wafanyakazi wengine watachaguliwa kurudi kwa kipindi tofauti kesho.</li>
+        <li><span class="ico">📋</span> <span>Wafanyakazi wengine watachaguliwa kurudi kwa kipindi tofauti kesho.</span></li>
       {% endif %}
-      <li><span class="ico">💬</span> Kazi ya kesho itakuwa tofauti na ya leo, rahisi zaidi na ya kufurahisha zaidi.</li>
-      <li><span class="ico">⏱</span> Kazi ya kesho haitachukua zaidi ya <strong>dakika 30</strong>.</li>
-      <li><span class="ico">💰</span> Wafanyakazi waliochaguliwa wanaweza kupata <strong>Ksh 350</strong> kwa kipindi hicho kifupi cha dakika 30.</li>
+      <li><span class="ico">💬</span> <span>Kazi ya kesho itakuwa tofauti na ya leo, rahisi zaidi na ya kufurahisha zaidi.</span></li>
+      <li><span class="ico">⏱</span> <span>Kazi ya kesho haitachukua zaidi ya <strong>dakika 30</strong>.</span></li>
+      <li><span class="ico">💰</span> <span>Wafanyakazi waliochaguliwa wanaweza kupata <strong>Ksh 350</strong> kwa kipindi hicho kifupi cha dakika 30.</span></li>
     </ul>
   {% else %}
     <h2>Possibilities for future work</h2>
     <ul class="reminder-list">
       {% if treat == 'treat' %}
-        <li><span class="ico">👔</span> Some workers will be selected by a hiring manager, who is also present today, to be invited back for a separate session tomorrow.</li>
+        <li><span class="ico">👔</span> <span>Some workers will be selected by a hiring manager, who is also present today, to be invited back for a separate session tomorrow.</span></li>
       {% else %}
-        <li><span class="ico">📋</span> Some workers will be selected to be invited back for a separate session tomorrow.</li>
+        <li><span class="ico">📋</span> <span>Some workers will be selected to be invited back for a separate session tomorrow.</span></li>
       {% endif %}
-      <li><span class="ico">💬</span> The future task tomorrow will be different from today, easier and more fun.</li>
-      <li><span class="ico">⏱</span> The future task will take at most <strong>30 minutes</strong>.</li>
-      <li><span class="ico">💰</span> Workers selected can earn <strong>Ksh 350</strong> for that short 30-minute session.</li>
+      <li><span class="ico">💬</span> <span>The future task tomorrow will be different from today, easier and more fun.</span></li>
+      <li><span class="ico">⏱</span> <span>The future task will take at most <strong>30 minutes</strong>.</span></li>
+      <li><span class="ico">💰</span> <span>Workers selected can earn <strong>Ksh 350</strong> for that short 30-minute session.</span></li>
     </ul>
   {% endif %}
 
@@ -50,7 +50,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('next-btn').addEventListener('click', function () {
-    var btn = document.querySelector('button[type=submit], input[type=submit]');
+    var btn = document.querySelector('.otree-btn-next, button[type=submit], input[type=submit]');
     if (btn) btn.click();
   });
 });

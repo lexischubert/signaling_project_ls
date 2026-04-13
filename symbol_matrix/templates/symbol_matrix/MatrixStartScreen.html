@@ -21,33 +21,33 @@
   {% if language == 'sw' %}
     <h2>Uko tayari? Tuangalie na tuanze!</h2>
     <ul class="reminder-list">
-      <li><span class="ico">⏱</span> Sasa utaanza kipindi cha kwanza cha kazi amabacho kitachukua <strong>dakika {{ task_minutes }}</strong>.</li>
+      <li><span class="ico">⏱</span> <span>Sasa utaanza kipindi cha kwanza cha kazi amabacho kitachukua <strong>dakika {{ task_minutes }}</strong>.</span></li>
       {% if condition == 'no_break' %}
-        <li><span class="ico">➡️</span> Baada ya dakika {{ task_minutes }} utaendelea <strong>kufanya kazi</strong> kwa dakika {{ break_minutes }} zaidi, kisha utafanya kipindi cha mwisho cha dakika {{ task_minutes }}.</li>
+        <li><span class="ico">➡️</span> <span>Baada ya dakika {{ task_minutes }} utaendelea <strong>kufanya kazi</strong> kwa dakika {{ break_minutes }} zaidi, kisha utafanya kipindi cha mwisho cha dakika {{ task_minutes }}.</span></li>
       {% elif condition == 'forced_break' %}
-        <li><span class="ico">☕</span> Baada ya dakika {{ task_minutes }} utachukua <strong>mapumziko ya lazima ya dakika {{ break_minutes }}</strong> kabla ya kufanya kazi kwa kipindi kingine cha dakika {{ task_minutes }}.</li>
+        <li><span class="ico">☕</span> <span>Baada ya dakika {{ task_minutes }} utachukua <strong>mapumziko ya lazima ya dakika {{ break_minutes }}</strong> kabla ya kufanya kazi kwa kipindi kingine cha dakika {{ task_minutes }}.</span></li>
       {% else %}
-        <li><span class="ico">☕</span> Baada ya dakika {{ task_minutes }} unaweza <strong>kuchagua</strong> kuchukua mapumziko ya dakika {{ break_minutes }} au kuendelea kufanya kazi.</li>
+        <li><span class="ico">☕</span> <span>Baada ya dakika {{ task_minutes }} unaweza <strong>kuchagua</strong> kuchukua mapumziko ya dakika {{ break_minutes }} au kuendelea kufanya kazi.</span></li>
       {% endif %}
-      <li><span class="ico">💰</span> <strong>Kadri unavyokamilisha kazi nyingi kwa usahihi</strong>, ndivyo malipo yako yatanavyoongezeka.</li>
-      <li><span class="ico">➡️</span> Usisahau kubonyeza <strong>Thibitisha Uteuzi</strong> ili uendelee kutoka jedwali moja hadi nyingine.</li>
-      <li><span class="ico">🔇</span> Hakuna maoni yanayotolewa baada ya kila jedwali — fanya vizuri iwezekanavyo, kisha endelea. Kumbuka kwamba kasi na usahihi zote mbili zina umuhimu.</li>
+      <li><span class="ico">💰</span> <span><strong>Kadri unavyokamilisha kazi nyingi kwa usahihi</strong>, ndivyo malipo yako yatanavyoongezeka.</span></li>
+      <li><span class="ico">➡️</span> <span>Usisahau kubonyeza <strong>Thibitisha Uteuzi</strong> ili uendelee kutoka jedwali moja hadi nyingine.</span></li>
+      <li><span class="ico">🔇</span> <span>Hakuna maoni yanayotolewa baada ya kila jedwali — fanya vizuri iwezekanavyo, kisha endelea. Kumbuka kwamba kasi na usahihi zote mbili zina umuhimu.</span></li>
     </ul>
     <button type="button" id="start-btn">&#9654;&nbsp;&nbsp;Anza kazi</button>
   {% else %}
     <h2>Ready? Let's review and then begin!</h2>
     <ul class="reminder-list">
-      <li><span class="ico">⏱</span> You will now start the first work session for <strong>{{ task_minutes }} minutes</strong>.</li>
+      <li><span class="ico">⏱</span> <span>You will now start the first work session for <strong>{{ task_minutes }} minutes</strong>.</span></li>
       {% if condition == 'no_break' %}
-        <li><span class="ico">➡️</span> After {{ task_minutes }} minutes you will <strong>continue working</strong> for {{ break_minutes }} more minute{% if break_minutes != 1 %}s{% endif %}, then do the final {{ task_minutes }}-minute session.</li>
+        <li><span class="ico">➡️</span> <span>After {{ task_minutes }} minutes you will <strong>continue working</strong> for {{ break_minutes }} more minute{% if break_minutes != 1 %}s{% endif %}, then do the final {{ task_minutes }}-minute session.</span></li>
       {% elif condition == 'forced_break' %}
-        <li><span class="ico">☕</span> After {{ task_minutes }} minutes you will take a <strong>required {{ break_minutes }}-minute break</strong> before working for another {{ task_minutes }}-minute session.</li>
+        <li><span class="ico">☕</span> <span>After {{ task_minutes }} minutes you will take a <strong>required {{ break_minutes }}-minute break</strong> before working for another {{ task_minutes }}-minute session.</span></li>
       {% else %}
-        <li><span class="ico">☕</span> After {{ task_minutes }} minutes you can <strong>choose</strong> to take a {{ break_minutes }}-minute break or continue working.</li>
+        <li><span class="ico">☕</span> <span>After {{ task_minutes }} minutes you can <strong>choose</strong> to take a {{ break_minutes }}-minute break or continue working.</span></li>
       {% endif %}
-      <li><span class="ico">💰</span> The <strong>more tasks you finish correctly</strong>, the higher your payoff.</li>
-      <li><span class="ico">➡️</span> Don't forget to hit <strong>Confirm Selection</strong> to keep moving from grid to grid.</li>
-      <li><span class="ico">🔇</span> No feedback is given after each grid — do your best, and move on. Remember that both speed and accuracy matter.</li>
+      <li><span class="ico">💰</span> <span>The <strong>more tasks you finish correctly</strong>, the higher your payoff.</span></li>
+      <li><span class="ico">➡️</span> <span>Don't forget to hit <strong>Confirm Selection</strong> to keep moving from grid to grid.</span></li>
+      <li><span class="ico">🔇</span> <span>No feedback is given after each grid — do your best, and move on. Remember that both speed and accuracy matter.</span></li>
     </ul>
     <button type="button" id="start-btn">&#9654;&nbsp;&nbsp;Start task</button>
   {% endif %}
@@ -57,7 +57,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('start-btn').addEventListener('click', function () {
-    var btn = document.querySelector('button[type=submit], input[type=submit]');
+    var btn = document.querySelector('.otree-btn-next, button[type=submit], input[type=submit]');
     if (btn) btn.click();
   });
 });
