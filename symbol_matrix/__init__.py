@@ -965,7 +965,11 @@ class BreakWait(Page):
 
     @staticmethod
     def vars_for_template(player):
-        return {'duration_seconds': _break_duration(player), 'language': _lang(player)}
+        return {
+            'duration_seconds': _break_duration(player),
+            'language':         _lang(player),
+            'field_id':         player.field_maybe_none('field_id') or '',
+        }
 
     @staticmethod
     def before_next_page(player, timeout_happened):
