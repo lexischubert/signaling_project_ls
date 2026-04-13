@@ -1406,6 +1406,8 @@ class MatrixBridgeTask(Page):
 class MatrixTask2(Page):
     """Segment 2 of the matrix task (after break / bridge)."""
 
+    template_name = 'symbol_matrix/MatrixTask.html'
+
     @staticmethod
     def is_displayed(player):
         return player.session.config.get('task_type') == 'matrix'
