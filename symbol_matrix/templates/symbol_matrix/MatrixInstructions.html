@@ -104,10 +104,51 @@
     display: none;
     flex-direction: column;
     justify-content: center;
-    padding: 12px 16px;
+    align-items: center;
+    padding: 20px 24px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 1px 5px rgba(0,0,0,.09);
+    text-align: center;
+  }
+  #intro-panel .intro-title {
+    font-size: clamp(.95rem, 2.6vmin, 1.15rem);
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 16px;
+    letter-spacing: .01em;
+  }
+  #intro-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 480px;
+    width: 100%;
+  }
+  #intro-panel ul li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: clamp(.85rem, 2.3vmin, .97rem);
+    color: #334155;
+    line-height: 1.55;
+    text-align: left;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 9px 14px;
+  }
+  #intro-panel ul li .li-warn {
+    font-weight: 700;
+    color: #9a3412;
+  }
+  #intro-panel ul li .li-icon {
+    flex-shrink: 0;
+    font-size: 1.05em;
+    line-height: 1.55;
   }
   @keyframes target-pulse {
     0%   { box-shadow: 0 0 0 0   rgba(37,99,235,.65); }
@@ -288,22 +329,22 @@
   <!-- Step 0 intro panel — shown alone, takes flex:1 -->
   <div id="intro-panel">
     {% if language == 'sw' %}
-    <p style="font-weight:700; font-size:clamp(.95rem,2.6vmin,1.15rem); color:#1e293b; margin:0 0 16px; text-align:center;">Utakachofanya</p>
-    <ul style="font-size:clamp(.85rem,2.3vmin,1rem); color:#334155; line-height:1.7; padding-left:1.2rem; margin:0;">
-      <li>Hautaweza kurudi nyuma kwa ukurasa uliokamilisha baada ya kufanya maamuzi na kusonga mbele</li>
-      <li>Utaona jedwali kubwa.</li>
-      <li>Kazi yako ni kutafuta alama maalum katika kila jedwali, na kuigusa haraka iwezekanavyo kwa usahihi.</li>
-      <li>Sasa tutapitia hatua na kazi pamoja.</li>
-      <li>Malipo yako ya kazi yatategemea kasi na usahihi.</li>
+    <p class="intro-title">Utakachofanya:</p>
+    <ul>
+      <li><span class="li-icon">🔲</span><span>Utaona jedwali kubwa.</span></li>
+      <li><span class="li-icon">ε</span><span>Kazi yako ni kutafuta alama maalum katika kila jedwali, na kuigusa haraka iwezekanavyo kwa usahihi.</span></li>
+      <li><span class="li-icon">🎯</span><span>Malipo yako ya kazi yatategemea kasi na usahihi.</span></li>
+      <li><span class="li-icon">▶️</span><span>Sasa tutapitia hatua na kazi pamoja.</span></li>
+      <li><span class="li-icon">⚠️</span><span class="li-warn">Hautaweza kurudi nyuma kwa ukurasa uliokamilisha baada ya kufanya maamuzi na kusonga mbele!</span></li>
     </ul>
     {% else %}
-    <p style="font-weight:700; font-size:clamp(.95rem,2.6vmin,1.15rem); color:#1e293b; margin:0 0 16px; text-align:center;">What you will do</p>
-    <ul style="font-size:clamp(.85rem,2.3vmin,1rem); color:#334155; line-height:1.7; padding-left:1.2rem; margin:0;">
-      <li>You cannot use the back button or return to a previous page.</li>
-      <li>You will see a large grid.</li>
-      <li>Your job is to find a specific symbol in each grid, and tap on it as quickly and accurately as possible.</li>
-      <li>We will now walk through the steps and task together.</li>
-      <li>Your payment for the task will depend on speed and accuracy.</li>
+    <p class="intro-title">What you will do:</p>
+    <ul>
+      <li><span class="li-icon">🔲</span><span>You will see a large grid.</span></li>
+      <li><span class="li-icon">ε</span><span>Your job is to find a specific symbol in each grid, and tap on it as quickly and accurately as possible.</span></li>
+      <li><span class="li-icon">🎯</span><span>Your payment for the task will depend on speed and accuracy.</span></li>
+      <li><span class="li-icon">▶️</span><span>We will now walk through the steps and task together.</span></li>
+      <li><span class="li-icon">⚠️</span><span class="li-warn">You cannot use the back button or return to a previous page!</span></li>
     </ul>
     {% endif %}
   </div>

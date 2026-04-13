@@ -56,6 +56,29 @@
     touch-action: manipulation;
   }
   #confirm-btn:active { background: #0f172a; }
+
+  .treat-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fff7ed;
+    border-left: 4px solid #c2410c;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 14px;
+    margin-bottom: 18px;
+    text-align: left;
+  }
+  .treat-notice-icon {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    flex-shrink: 0;
+  }
+  .treat-notice-text {
+    font-size: .88rem;
+    color: #9a3412;
+    line-height: 1.55;
+  }
 </style>
 
 <div class="container mt-3">
@@ -66,8 +89,13 @@
       <h4 class="text-center mb-1">Kipindi cha 1 kimekamilika!</h4>
       <p class="text-center text-muted mb-4" style="font-size:.95rem;">
         Umekamilisha sehemu ya kwanza ya kipindi chako cha kazi. Tafadhali chagua ungependa nini ifuate.
-        {% if treat == 'treat' %}<br><br>Tafadhali kumbuka kwamba chaguo unalofanya litaonyeshwa meneja wa kuajiri anayehusika na kuamua ni nani atakayealikwa kurudi kufanya kazi nyingine.{% endif %}
       </p>
+      {% if treat == 'treat' %}
+      <div class="treat-notice">
+        <span class="treat-notice-icon"></span>
+        <span class="treat-notice-text">Tafadhali kumbuka kwamba chaguo unalofanya litaonyeshwa meneja wa kuajiri anayehusika na kuamua ni nani atakayealikwa kurudi kufanya kazi nyingine.</span>
+      </div>
+      {% endif %}
 
       <div class="row g-3">
         <div class="col-6 d-flex">
@@ -99,8 +127,13 @@
       <h4 class="text-center mb-1">Session 1 complete!</h4>
       <p class="text-center text-muted mb-4" style="font-size:.95rem;">
         You have completed the first part of your work session. Please choose what you would like to happen next.
-        {% if treat == 'treat' %}<br><br>Please note that which option you choose will be shared with the hiring manager in charge of deciding who is invited back for another task.{% endif %}
       </p>
+      {% if treat == 'treat' %}
+      <div class="treat-notice">
+        <span class="treat-notice-icon"></span>
+        <span class="treat-notice-text">Please note that which option you choose will be shared with the hiring manager in charge of deciding who is invited back for another task.</span>
+      </div>
+      {% endif %}
 
       <div class="row g-3">
         <div class="col-6 d-flex">
