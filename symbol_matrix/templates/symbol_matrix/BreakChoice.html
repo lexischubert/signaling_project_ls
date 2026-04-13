@@ -65,8 +65,8 @@
       {% if language == 'sw' %}
       <h4 class="text-center mb-1">Kipindi cha 1 kimekamilika!</h4>
       <p class="text-center text-muted mb-4" style="font-size:.95rem;">
-        Umekamilisha sehemu ya kwanza ya kipindi chako cha kazi. Tafadhali chagua ungependa nini ifuate. <br><br>
-        Tafadhali kumbuka kwamba chaguo unalofanya litaonyeshwa meneja wa kuajiri anayehusika na kuamua ni nani atakayealikwa kurudi kufanya kazi nyingine.
+        Umekamilisha sehemu ya kwanza ya kipindi chako cha kazi. Tafadhali chagua ungependa nini ifuate.
+        {% if treat == 'treat' %}<br><br>Tafadhali kumbuka kwamba chaguo unalofanya litaonyeshwa meneja wa kuajiri anayehusika na kuamua ni nani atakayealikwa kurudi kufanya kazi nyingine.{% endif %}
       </p>
 
       <div class="row g-3">
@@ -98,8 +98,8 @@
       {% else %}
       <h4 class="text-center mb-1">Session 1 complete!</h4>
       <p class="text-center text-muted mb-4" style="font-size:.95rem;">
-        You have completed the first part of your work session. Please choose what you would like to happen next. <br><br>
-        Please note that which option you choose will be shared with the hiring manager in charge of deciding who is invited back for another task.
+        You have completed the first part of your work session. Please choose what you would like to happen next.
+        {% if treat == 'treat' %}<br><br>Please note that which option you choose will be shared with the hiring manager in charge of deciding who is invited back for another task.{% endif %}
       </p>
 
       <div class="row g-3">

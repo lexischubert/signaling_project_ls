@@ -947,6 +947,7 @@ class BreakChoice(Page):
             'task_minutes':  player.session.config.get('task_minutes',  C.TASK_MINUTES_DEFAULT),
             'break_minutes': player.session.config.get('break_minutes', C.BREAK_MINUTES_DEFAULT),
             'language':      _lang(player),
+            'treat':         player.field_maybe_none('treat') or 'no_treat',
         }
 
     @staticmethod
