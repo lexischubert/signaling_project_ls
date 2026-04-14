@@ -183,9 +183,22 @@
 
 <script src="/static/katex/katex.min.js"></script>
 <script>
-var _task  = null;
-var _sel   = new Set();
-var _start = null;
+var _task        = null;
+var _sel         = new Set();
+var _start       = null;
+var _retryTimer  = null;
+
+// Retry request_task every 3 s while waiting for a task.
+// Safe because server returns the already-staged task unchanged (no new trial created).
+function _scheduleRetry() {
+  if (_retryTimer) clearTimeout(_retryTimer);
+  _retryTimer = setTimeout(function() {
+    if (!_task) {
+      liveSend({ type: 'request_task' });
+      _scheduleRetry();
+    }
+  }, 3000);
+}
 
 // ── Session countdown ──────────────────────────────────────────
 var _timerEnd = Date.now() + {{ duration_seconds }} * 1000;
@@ -221,6 +234,7 @@ function sizeGrid() {
 }
 
 function showTask(task) {
+  if (_retryTimer) { clearTimeout(_retryTimer); _retryTimer = null; }
   _task  = task;
   _sel   = new Set();
   _start = Date.now();
@@ -269,9 +283,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Show loading state while waiting for next task
     document.getElementById('sym-grid').style.display = 'none';
     document.getElementById('loading-msg').style.display = '';
+
+    // If the next-task response is dropped, retry via request_task.
+    // The server returns whatever task is currently staged — either the
+    // next new task (if submit was received) or the same task again
+    // (if submit was dropped), so no trial is ever double-counted.
+    _scheduleRetry();
   });
 
   liveSend({ type: 'request_task' });
+  _scheduleRetry();
 });
 </script>
 {{ endblock }}

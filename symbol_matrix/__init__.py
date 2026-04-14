@@ -675,11 +675,17 @@ def _matrix_live_method(player, data, block):
     msg_type = data.get('type')
 
     if msg_type == 'request_task':
-        task = _generate_matrix_task()
-        player.matrix_current_correct_cells = json.dumps(task['correct_cells'])
-        player.matrix_current_target_id     = task['target']['id']
-        player.matrix_current_n_targets     = task['n_targets']
-        player.matrix_current_seed          = task['seed']
+        if player.matrix_current_correct_cells != '[]':
+            # A task is already staged (e.g. retry after a dropped websocket message).
+            # Rebuild it from the stored seed so the client gets the exact same grid
+            # without creating a new trial or affecting any counters.
+            task = _generate_matrix_task(seed=player.matrix_current_seed)
+        else:
+            task = _generate_matrix_task()
+            player.matrix_current_correct_cells = json.dumps(task['correct_cells'])
+            player.matrix_current_target_id     = task['target']['id']
+            player.matrix_current_n_targets     = task['n_targets']
+            player.matrix_current_seed          = task['seed']
         return {player.id_in_group: {'type': 'task', 'task': task}}
 
     if msg_type == 'submit_answer':

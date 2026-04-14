@@ -62,17 +62,21 @@ def _get_treat(player):
     return 'no_treat'
 
 
-def _generate_matrix_task():
-    """Return a new random symbol-matrix trial.
+def _generate_matrix_task(seed=None):
+    """Return a symbol-matrix trial.
 
     All symbols in a trial (target + distractors) are drawn from the same
     visual-similarity group, making confusable neighbours the default.
     Target count N is uniformly random in [MATRIX_MIN_TARGETS, MATRIX_MAX_TARGETS].
     The target is guaranteed to appear at least once.
+
+    Pass seed to reproduce a previously generated task exactly (used for
+    idempotent request_task retries on reconnect).
     """
     if not PURE_SYMBOL_GROUPS:
         raise RuntimeError('symbols.csv must define at least one group with 2+ symbols.')
-    seed = random.randint(0, 2**31 - 1)
+    if seed is None:
+        seed = random.randint(0, 2**31 - 1)
     rng  = random.Random(seed)   # isolated RNG — does not affect global state
     group_symbols = rng.choice(list(PURE_SYMBOL_GROUPS.values()))
     target      = rng.choice(group_symbols)
